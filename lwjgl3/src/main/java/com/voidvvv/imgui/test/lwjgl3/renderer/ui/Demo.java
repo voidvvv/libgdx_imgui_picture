@@ -35,6 +35,7 @@ public class Demo implements UIRender{
 
         imagePanel.render();
         pointsPanel.render();
+
     }
 
     public void renderPanel () {

@@ -14,7 +14,7 @@ public class PointsPanel {
         if (mainPicture == null) {
             return;
         }
-        String pictureName = mainPicture.getName();ImGui.separator();
+        String pictureName = mainPicture.getName();
         if (ImGui.begin("PointsPanel")) {
             ImGui.text("picture name: " + pictureName);
             for (BaseSocket socket : mainPicture.getSockets()) {

@@ -23,22 +23,32 @@ public class MyCameraInputListener implements InputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
+        boolean result = false;
         if (keycode == Input.Keys.DOWN) {
             this.controller.moveDown = true;
+            result = true;
         }
         if (keycode == Input.Keys.UP) {
             this.controller.moveUp = true;
+            result = true;
+
         }
         if (keycode == Input.Keys.LEFT) {
             this.controller.moveLeft = true;
+            result = true;
+
         }
         if (keycode == Input.Keys.RIGHT) {
             this.controller.moveRight = true;
+            result = true;
+
         }
         if (keycode == Input.Keys.SPACE) {
             this.controller.reset = true;
+            result = true;
+
         }
-        return false;
+        return result;
     }
 
     @Override
@@ -65,6 +75,9 @@ public class MyCameraInputListener implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT)) {
+            return true;
+        }
         return false;
     }
 
@@ -80,11 +93,13 @@ public class MyCameraInputListener implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        boolean result = false;
         if (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT)) {
             this.controller.move.add(screenX - lastMousePosition.x,screenY - lastMousePosition.y,0);
+            result = true;
         }
         lastMousePosition.set(screenX, screenY, 0);
-        return false;
+        return result;
     }
 
     @Override

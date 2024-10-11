@@ -8,24 +8,28 @@ import imgui.ImVec2;
 
 public class ImagePanel {
     boolean render = true;
-    ImVec2 picSize = new ImVec2(50,50);
+    ImVec2 picSize = new ImVec2(50, 50);
+    int tmpMainPic = -1;
+    BasePictureWareHouse basePictureWareHouse = null;
 
-    public void render () {
+    public void render() {
         renderMainPanel();
+
+        postRender();
     }
 
     private void renderMainPanel() {
-        int tmpMainPic = -1;
-        BasePictureWareHouse basePictureWareHouse = MainGame.getInstance().getBasePictureWareHouse();
+        tmpMainPic = -1;
+        basePictureWareHouse = MainGame.getInstance().getBasePictureWareHouse();
         int totalSize = basePictureWareHouse.getTotalSize();
         if (render) {
             if (ImGui.begin("images_01")) {
-                picSize.set(ImGui.getWindowSizeX()* 0.75f,ImGui.getWindowSizeY() * 0.75f);
+                picSize.set(ImGui.getWindowSizeX() * 0.75f, ImGui.getWindowSizeY() * 0.75f);
 
 
                 for (int x = 0; x < totalSize; x++) {
                     BasePicture pic = basePictureWareHouse.getPic(x);
-                    if (ImGui.imageButton(pic.getTextureId(),picSize)) {
+                    if (ImGui.imageButton(pic.getTextureId(), picSize)) {
                         tmpMainPic = x;
                     }
                     ImGui.text(pic.getName());
@@ -38,6 +42,10 @@ public class ImagePanel {
             ImGui.end();
         }
 
+
+    }
+
+    public void postRender() {
         // post logic
         if (tmpMainPic >= 0) {
             basePictureWareHouse.setMainPicture(tmpMainPic);

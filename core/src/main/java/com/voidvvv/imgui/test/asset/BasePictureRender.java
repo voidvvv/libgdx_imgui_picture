@@ -32,7 +32,10 @@ public class BasePictureRender {
     float penalY = 0f;
 
     public void update(float delta) {
-
+        BasePictureWareHouse basePictureWareHouse = MainGame.getInstance().getBasePictureWareHouse();
+        if (basePictureWareHouse.addNewSocketFlag) {
+            basePictureWareHouse.addNewSocket();
+        }
 
     }
 
