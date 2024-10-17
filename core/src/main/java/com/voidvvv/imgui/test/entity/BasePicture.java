@@ -1,19 +1,13 @@
 package com.voidvvv.imgui.test.entity;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
-import com.voidvvv.imgui.test.MainGame;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BasePicture {
     public final Sprite originSprite;
@@ -23,59 +17,36 @@ public class BasePicture {
 
     private List<BaseSocket> sockets;
 
-    private Map<BaseSocket, List<BaseRect>> rects;
+    private List<BasePolygon> basePolygons;
+
+    float x,y;
+    float width,height;
+    float originX,originY;
+    private float scaleX = 1, scaleY = 1;
+    boolean dirty = true;
+    float rotation;
 
     public BasePicture(Texture texture, String name) {
         this.originSprite = new Sprite(texture);
         sockets = new ArrayList<>();
-        rects = new HashMap<>();
         this.name = name;
+        basePolygons = new ArrayList<>();
+        x = y = 0f;
+        width = texture.getWidth();
+        height = texture.getHeight();
+        originX = 0f;
+        originY = 0f;
+        syncToSprite();
     }
 
-    public void render (SpriteBatch batch, ShapeRenderer shapeRenderer) {
-        Camera camera = MainGame.getInstance().getCameraManager().getMainCamera();
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        originSprite.draw(batch);
-        batch.end();
-        renderSockets(shapeRenderer);
-        renderRects(shapeRenderer);
+    private void syncToSprite() {
+        this.originSprite.setPosition(x - width/2, y - height/2);
+        this.originSprite.setScale(scaleX,scaleY);
+        this.originSprite.setRotation(rotation);
     }
 
-    private void renderSockets(ShapeRenderer shapeRenderer) {
-        Camera camera = MainGame.getInstance().getCameraManager().getMainCamera();
-        shapeRenderer.setAutoShapeType(true);
-        shapeRenderer.setColor(Color.BLUE);
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        for (BaseSocket socket : sockets) {
-            shapeRenderer.circle(socket.getX(),socket.getY(),5f);
-        }
-        shapeRenderer.end();
-    }
-
-    private void renderRects(ShapeRenderer shapeRenderer) {
-        Camera camera = MainGame.getInstance().getCameraManager().getMainCamera();
-        shapeRenderer.setAutoShapeType(true);
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin();
-        for (var entry : rects.entrySet()) {
-            List<BaseRect> value = entry.getValue();
-            BaseSocket key = entry.getKey();
-            renderDot(key,shapeRenderer);
-            for (BaseRect rect : value) {
-                renderRect(key,rect,shapeRenderer);
-            }
-        }
-        shapeRenderer.end();
-    }
-
-    private void renderRect(BaseSocket key, BaseRect rect, ShapeRenderer shapeRenderer) {
-        shapeRenderer.set(ShapeRenderer.ShapeType.Line);
-    }
-
-    private void renderDot(BaseSocket key, ShapeRenderer shapeRenderer) {
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+    public List<BasePolygon> getBasePolygons() {
+        return basePolygons;
     }
 
 
@@ -92,45 +63,27 @@ public class BasePicture {
     }
 
     public List<BaseSocket> getSockets() {
+        fix();
         return sockets;
     }
 
-    public void setSockets(List<BaseSocket> sockets) {
-        this.sockets = sockets;
-    }
-
-    public Map<BaseSocket, List<BaseRect>> getRects() {
-        return rects;
-    }
-
-    public void setRects(Map<BaseSocket, List<BaseRect>> rects) {
-        this.rects = rects;
-    }
 
     Vector3 tmpV3 = new Vector3();
     Vector3 tmpV3Factor = new Vector3();
     public void addNewSocket(Vector3 world) {
         tmpV3.set(world);
-        worldToFactor(tmpV3, tmpV3Factor);
+        worldToFactor(tmpV3);
         String name = determineSocketName(tmpV3);
-        sockets.add(new BaseSocket(name,tmpV3Factor.x,tmpV3Factor.y, tmpV3.x, tmpV3.y));
+        sockets.add(new BaseSocket(name, tmpV3.x, tmpV3.y));
     }
 
     private String determineSocketName(Vector3 tmpV3) {
         return "Socket_" + sockets.size();
     }
 
-    private void worldToFactor(Vector3 tmpV3,Vector3 tmpV3Factor) {
+    private void worldToFactor(Vector3 tmpV3) {
         float tmpX = tmpV3.x;
         float tmpY = tmpV3.y;
-
-        Rectangle rectangle = this.originSprite.getBoundingRectangle();
-        float x = rectangle.getX();
-        float y = rectangle.getY();
-        float width = rectangle.getWidth();
-        float height = rectangle.getHeight();
-        float originX = this.originSprite.getOriginX();
-        float originY = this.originSprite.getOriginY();
 
         float worldOriginX = x + originX;
         float worldOriginY = y + originY;
@@ -139,4 +92,113 @@ public class BasePicture {
         tmpV3Factor.y = Math.abs(tmpY - worldOriginY) / height;
         tmpV3Factor.z = 0;
     }
+
+    public void fix() {
+        if (!dirty) {
+            return;
+        }
+        dirty = false;
+
+        final List<BaseSocket> socketList = this.sockets;
+        final float positionX = x;
+        final float positionY = y;
+        final float originX = this.originX;
+        final float originY = this.originY;
+        final float scaleX = this.scaleX;
+        final float scaleY = this.scaleY;
+        final boolean scale = scaleX != 1 || scaleY != 1;
+        final float rotation = this.rotation;
+        final float cos = MathUtils.cosDeg(rotation);
+        final float sin = MathUtils.sinDeg(rotation);
+
+        for (int i = 0; i < socketList.size(); i++) {
+            BaseSocket baseSocket = socketList.get(i);
+            float x = baseSocket.xStart;
+            float y = baseSocket.yStart;
+            // scale if needed
+            if (scale) {
+                x *= scaleX;
+                y *= scaleY;
+            }
+
+            // rotate if needed
+            if (rotation != 0) {
+                float oldX = x;
+                x = cos * x - sin * y;
+                y = sin * oldX + cos * y;
+            }
+            baseSocket.setX(positionX + x + originX);
+            baseSocket.setY(positionY + y + originY);
+        }
+    }
+
+
+    public void deleteSocket(int deleteSocketIndex) {
+        BaseSocket baseSocket = sockets.get(deleteSocketIndex);
+        sockets.remove(baseSocket);
+    }
+
+
+
+    /** Sets the origin point to which all of the polygon's local vertices are relative to. */
+    public void setOrigin (float originX, float originY) {
+        this.originX = originX;
+        this.originY = originY;
+        syncToSprite();
+        dirty = true;
+    }
+
+    /** Sets the polygon's position within the world. */
+    public void setPosition (float x, float y) {
+        this.x = x;
+        this.y = y;
+        syncToSprite();
+        dirty = true;
+    }
+
+
+    /** Translates the polygon's position by the specified horizontal and vertical amounts. */
+    public void translate (float x, float y) {
+        this.x += x;
+        this.y += y;
+        syncToSprite();
+        dirty = true;
+    }
+
+    /** Sets the polygon to be rotated by the supplied degrees. */
+    public void setRotation (float degrees) {
+        this.rotation = degrees;
+        syncToSprite();
+        dirty = true;
+    }
+
+    /** Applies additional rotation to the polygon by the supplied degrees. */
+    public void rotate (float degrees) {
+        rotation += degrees;
+        syncToSprite();
+        dirty = true;
+    }
+
+    /** Sets the amount of scaling to be applied to the polygon. */
+    public void setScale (float scaleX, float scaleY) {
+        this.scaleX = scaleX;
+        this.scaleY = scaleY;
+        syncToSprite();
+        dirty = true;
+    }
+
+    /** Applies additional scaling to the polygon by the supplied amount. */
+    public void scale (float amount) {
+        this.scaleX += amount;
+        this.scaleY += amount;
+        syncToSprite();
+        dirty = true;
+    }
+
+    /** Sets the polygon's world vertices to be recalculated when calling {@link #getTransformedVertices()
+     * getTransformedVertices}. */
+    public void dirty () {
+        dirty = true;
+    }
+
 }

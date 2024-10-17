@@ -2,18 +2,22 @@ package com.voidvvv.imgui.test.entity;
 
 public class BaseSocket {
 
-    private float xFactor;
-    private float yFactor;
-    private float x;
-    private float y;
-    private final String name;
+    public float xStart;
+    public float yStart;
+    public float x;
+    public float y;
+    private String name;
 
-    public BaseSocket(String name, float xf, float yf, float x, float y) {
+    public BaseSocket(String name, float x, float y) {
         this.name = name;
-        this.xFactor = xf;
-        this.yFactor = yf;
+        this.xStart = x;
+        this.yStart = y;
         this.x = x;
         this.y = y;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public float getX() {
@@ -38,13 +42,5 @@ public class BaseSocket {
 
     public String getName() {
         return name;
-    }
-
-    public float getxFactor() {
-        return xFactor;
-    }
-
-    public float getyFactor() {
-        return yFactor;
     }
 }

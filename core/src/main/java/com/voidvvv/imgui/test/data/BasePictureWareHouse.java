@@ -5,11 +5,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector3;
 import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.entity.BasePicture;
+import com.voidvvv.imgui.test.entity.BaseSocket;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BasePictureWareHouse {
+
+    public boolean shouldAdd = false;
+
     public boolean addNewSocketFlag = false;
 
     BasePicture mainPicture;
@@ -43,8 +47,10 @@ public class BasePictureWareHouse {
     public Vector3 tmpSocketVector = new Vector3();
 
     public void preAddSocket(Vector3 screen) {
-        tmpSocketVector.set(screen);
-        addNewSocketFlag = true;
+        if (shouldAdd) {
+            tmpSocketVector.set(screen);
+            addNewSocketFlag = true;
+        }
     }
 
     public void addNewSocket() {
@@ -57,5 +63,20 @@ public class BasePictureWareHouse {
         mainCamera.unproject(tmpSocketVector);
         currentPicture.addNewSocket(tmpSocketVector);
         addNewSocketFlag = false;
+    }
+
+    public void socketSelect(int socketIndex) {
+        if (mainPicture == null) {
+            return;
+        }
+        List<BaseSocket> sockets = mainPicture.getSockets();
+
+    }
+
+    public void deleteSocket(int deleteSocketIndex) {
+        if (mainPicture == null) {
+            return;
+        }
+        mainPicture.deleteSocket(deleteSocketIndex);
     }
 }
