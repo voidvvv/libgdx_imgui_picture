@@ -23,6 +23,14 @@ public class BasePolygon extends Polygon {
         }
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public boolean complete () {
         return super.getVertices().length >= 6;
     }

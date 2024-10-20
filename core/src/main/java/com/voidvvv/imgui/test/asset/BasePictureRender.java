@@ -21,25 +21,15 @@ public class BasePictureRender {
 
     PageData pageData = new PageData();
 
-    float panelYFixFactor = 0.5f;
-    float panelHeightFactor = 0.9f;
-    float panelWidthFactor = 0.2f;
-
-    float picXFactor = 0.85f;
-    float picYFactor = 0.93f;
-
-    float totalHeight = CameraManager.VIEWPORT_HEIGHT * panelHeightFactor;
-    float totalWidth = CameraManager.VIEWPORT_WIDTH * panelWidthFactor;
-
-    float penalX = 0f;
-    float penalY = 0f;
 
     public void update(float delta) {
         BasePictureWareHouse basePictureWareHouse = MainGame.getInstance().getBasePictureWareHouse();
         if (basePictureWareHouse.addNewSocketFlag) {
             basePictureWareHouse.addNewSocket();
         }
-
+        if (basePictureWareHouse.addNewSocketToPolygonFlag) {
+            basePictureWareHouse.addNewSocketToPolygon();
+        }
     }
 
 
@@ -91,9 +81,8 @@ public class BasePictureRender {
 
     private void renderRects(ShapeRenderer shapeRenderer, BasePicture basePicture) {
         Camera camera = MainGame.getInstance().getCameraManager().getMainCamera();
-        shapeRenderer.setAutoShapeType(true);
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin();
+        prepareForShape(shapeRenderer, camera);
+
         for (int i = 0; i < basePicture.getBasePolygons().size(); i++) {
             BasePolygon basePolygon = basePicture.getBasePolygons().get(i);
             if (basePolygon.complete()) {
@@ -102,6 +91,13 @@ public class BasePictureRender {
             }
         }
         shapeRenderer.end();
+    }
+
+    private void prepareForShape(ShapeRenderer shapeRenderer, Camera camera) {
+        shapeRenderer.setAutoShapeType(true);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.begin();
+        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
     }
 
     private void renderRect(BaseSocket key, BasePolygon rect, ShapeRenderer shapeRenderer) {

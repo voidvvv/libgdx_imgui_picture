@@ -36,7 +36,7 @@ public class ImGuiRenderer extends Game {
         ImGui.createContext();
         ImGuiIO io = ImGui.getIO();
         io.setIniFilename(null);
-        io.getFonts().addFontDefault();
+        io.getFonts().addFontFromFileTTF("C:\\Windows\\Fonts\\simsun.ttc",20.0f, ImGui.getIO().getFonts().getGlyphRangesChineseSimplifiedCommon());
         io.getFonts().build();
         io.addConfigFlags(ImGuiConfigFlags.ViewportsEnable); // 这个设置可以让imgui的panel放置在window外部
 

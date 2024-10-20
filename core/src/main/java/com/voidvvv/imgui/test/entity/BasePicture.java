@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BasePicture {
+    public int polygonIndexMax = 0;
     public final Sprite originSprite;
 
 
@@ -19,7 +20,7 @@ public class BasePicture {
 
     private List<BasePolygon> basePolygons;
 
-    float x,y;
+    public float x,y;
     float width,height;
     float originX,originY;
     private float scaleX = 1, scaleY = 1;
@@ -74,7 +75,7 @@ public class BasePicture {
         tmpV3.set(world);
         worldToFactor(tmpV3);
         String name = determineSocketName(tmpV3);
-        sockets.add(new BaseSocket(name, tmpV3.x, tmpV3.y));
+        sockets.add(new BaseSocket(name, tmpV3.x, tmpV3.y, tmpV3Factor.x, tmpV3Factor.y));
     }
 
     private String determineSocketName(Vector3 tmpV3) {
@@ -82,15 +83,37 @@ public class BasePicture {
     }
 
     private void worldToFactor(Vector3 tmpV3) {
-        float tmpX = tmpV3.x;
-        float tmpY = tmpV3.y;
+        final float positionX = x;
+        final float positionY = y;
+        tmpV3.x -= positionX;
+        tmpV3.y -= positionY;
+        tmpV3Factor.set(tmpV3);
+        final float originX = this.originX;
+        final float originY = this.originY;
+        final float scaleX = this.scaleX;
+        final float scaleY = this.scaleY;
+        final boolean scale = scaleX != 1 || scaleY != 1;
+        final float rotation = this.rotation;
+        final float cos = MathUtils.cosDeg(rotation);
+        final float sin = MathUtils.sinDeg(rotation);
 
-        float worldOriginX = x + originX;
-        float worldOriginY = y + originY;
+        float x = tmpV3.x;
+        float y = tmpV3.y;
+        // scale if needed
+        if (scale) {
+            x *= scaleX;
+            y *= scaleY;
+        }
 
-        tmpV3Factor.x = Math.abs(tmpX - worldOriginX) / width;
-        tmpV3Factor.y = Math.abs(tmpY - worldOriginY) / height;
-        tmpV3Factor.z = 0;
+        // rotate if needed
+        if (rotation != 0) {
+            float oldX = x;
+            x = cos * x - sin * y;
+            y = sin * oldX + cos * y;
+        }
+        tmpV3.x = (positionX + x + originX);
+        tmpV3.y = (positionY + y + originY);
+
     }
 
     public void fix() {

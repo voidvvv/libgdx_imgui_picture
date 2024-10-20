@@ -16,6 +16,14 @@ public class BaseSocket {
         this.y = y;
     }
 
+    public BaseSocket(String name, float x, float y, float xS, float yS) {
+        this.name = name;
+        this.xStart = xS;
+        this.yStart = yS;
+        this.x = x;
+        this.y = y;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -42,5 +50,21 @@ public class BaseSocket {
 
     public String getName() {
         return name;
+    }
+
+    public float getxStart() {
+        return xStart;
+    }
+
+    public void setxStart(float xStart) {
+        this.xStart = xStart;
+    }
+
+    public float getyStart() {
+        return yStart;
+    }
+
+    public void setyStart(float yStart) {
+        this.yStart = yStart;
     }
 }

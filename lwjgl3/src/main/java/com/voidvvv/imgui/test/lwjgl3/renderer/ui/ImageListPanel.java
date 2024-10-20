@@ -6,7 +6,7 @@ import com.voidvvv.imgui.test.entity.BasePicture;
 import imgui.ImGui;
 import imgui.ImVec2;
 
-public class ImagePanel {
+public class ImageListPanel {
     boolean render = true;
     ImVec2 picSize = new ImVec2(50, 50);
     int tmpMainPic = -1;

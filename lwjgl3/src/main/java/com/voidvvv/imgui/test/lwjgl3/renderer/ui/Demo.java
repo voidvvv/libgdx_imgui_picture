@@ -4,15 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.voidvvv.imgui.test.MainGame;
-import com.voidvvv.imgui.test.asset.MyAssetManager;
 import imgui.ImGui;
-import imgui.ImGuiIO;
 import imgui.flag.ImGuiKey;
 import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
 import imgui.type.ImString;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,9 +20,9 @@ public class Demo implements UIRender{
     ImString file = new ImString();
 
     Map<Long, Texture> textures = new HashMap<Long, Texture>();
-    ImagePanel imagePanel = new ImagePanel();
+    ImageListPanel imagePanel = new ImageListPanel();
 
-    PointsPanel pointsPanel = new PointsPanel();
+    ImageDetailPanel pointsPanel = new ImageDetailPanel();
     public Demo() {
     }
 
