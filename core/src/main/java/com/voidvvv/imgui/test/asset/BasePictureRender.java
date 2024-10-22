@@ -24,12 +24,17 @@ public class BasePictureRender {
 
     public void update(float delta) {
         BasePictureWareHouse basePictureWareHouse = MainGame.getInstance().getBasePictureWareHouse();
-        if (basePictureWareHouse.addNewSocketFlag) {
-            basePictureWareHouse.addNewSocket();
+        boolean pressed = basePictureWareHouse.pressed;
+        if (pressed) {
+            if (basePictureWareHouse.shouldAdd) {
+                basePictureWareHouse.addNewSocket();
+            }else if (basePictureWareHouse.shouldAddToPolygon) {
+                basePictureWareHouse.addNewSocketToPolygon();
+            }
         }
-        if (basePictureWareHouse.addNewSocketToPolygonFlag) {
-            basePictureWareHouse.addNewSocketToPolygon();
-        }
+
+        // reset
+        basePictureWareHouse.pressed = false;
     }
 
 

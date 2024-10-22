@@ -1,5 +1,6 @@
 package com.voidvvv.imgui.test.lwjgl3.renderer.ui;
 
+import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.entity.BasePicture;
 import com.voidvvv.imgui.test.entity.BasePolygon;
 import imgui.ImGui;
@@ -14,12 +15,16 @@ public class PolygonDetailPenal implements UIRender{
     ImString changedName = new ImString();
     boolean nameChange = false;
 
-    ImBoolean show = new ImBoolean(false);
+    public ImBoolean couldAddSocket = new ImBoolean(false);
+
+    public ImBoolean show = new ImBoolean(false);
 
     public void init (BasePicture basePicture, int i) {
         this.picture = basePicture;
         this.i = i;
         show.set(true);
+        couldAddSocket.set(false);
+        MainGame.getInstance().getBasePictureWareHouse().setCurrentPolygon(basePicture.getBasePolygons().get(i));
     }
 
     @Override
@@ -46,6 +51,8 @@ public class PolygonDetailPenal implements UIRender{
                     changeName();
                 }
             }
+            ImGui.sameLine();
+            ImGui.checkbox("couldAddSocket", couldAddSocket);
         }
         ImGui.separator();
         // points
@@ -61,14 +68,15 @@ public class PolygonDetailPenal implements UIRender{
     }
 
     private void changeName() {
-        nameChange = !nameChange;
+
         if (nameChange) {
             // if now is the change status
-            this.picture.getBasePolygons().get(i).setName(name);
+            this.picture.getBasePolygons().get(i).setName(this.changedName.get());
         } else {
             // if now is not the change status
             this.changedName.set(name);
         }
+        nameChange = !nameChange;
     }
 
     private void postRender() {

@@ -5,6 +5,7 @@ import com.voidvvv.imgui.test.data.BasePictureWareHouse;
 import com.voidvvv.imgui.test.entity.BasePicture;
 import com.voidvvv.imgui.test.entity.BasePolygon;
 import com.voidvvv.imgui.test.entity.BaseSocket;
+import com.voidvvv.imgui.test.lwjgl3.renderer.data.EditData;
 import imgui.ImGui;
 import imgui.flag.ImGuiKey;
 import imgui.type.ImBoolean;
@@ -121,6 +122,8 @@ public class ImageDetailPanel {
         if (typeInt.get() == TYPE_POLYGON) {
             shouldAdd.set(false);
         }
+
+        updateDate();
         BasePictureWareHouse basePictureWareHouse = MainGame.getInstance().getBasePictureWareHouse();
         if (socketIndex >= 0) {
             basePictureWareHouse.socketSelect(socketIndex);
@@ -136,6 +139,23 @@ public class ImageDetailPanel {
         if (polygonAddFlag) {
             basePictureWareHouse.addPolygon();
             polygonAddFlag = false;
+        }
+
+        if (EditData.status == EditData.POLYGON_ADD_SOCKET_STATUS) {
+            basePictureWareHouse.shouldAddToPolygon = true;
+        } else {
+            basePictureWareHouse.shouldAddToPolygon = false;
+        }
+
+    }
+
+    private void updateDate() {
+        if (shouldAdd.get()) {
+            EditData.status = EditData.SOCKET_ADD_STATUS;
+        }else if (polygonDetailPenal.couldAddSocket.get() && polygonDetailPenal.show.get()) {
+            EditData.status = EditData.POLYGON_ADD_SOCKET_STATUS;
+        } else {
+            EditData.status = EditData.NULL_STATUS;
         }
     }
 }

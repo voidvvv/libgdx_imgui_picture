@@ -7,6 +7,7 @@ import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.entity.BasePicture;
 import com.voidvvv.imgui.test.entity.BasePolygon;
 import com.voidvvv.imgui.test.entity.BaseSocket;
+import com.voidvvv.imgui.test.operations.OperationStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,17 +15,21 @@ import java.util.List;
 public class BasePictureWareHouse {
 
     public boolean shouldAdd = false;
-
-    public boolean addNewSocketFlag = false;
-    public boolean addNewSocketToPolygonFlag = false;
+    public boolean shouldAddToPolygon = false;
 
     BasePicture mainPicture;
 
     List<BasePicture> basePictureList = new ArrayList<>();
 
-    BasePolygon currentPolygon;
+    private BasePolygon currentPolygon;
 
-    boolean polygonModify = false;
+    public BasePolygon getCurrentPolygon() {
+        return currentPolygon;
+    }
+
+    public void setCurrentPolygon(BasePolygon currentPolygon) {
+        this.currentPolygon = currentPolygon;
+    }
 
     public void pushImage(Texture texture, String name) {
         this.basePictureList.add(new BasePicture(texture, name));
@@ -53,29 +58,34 @@ public class BasePictureWareHouse {
 
     public Vector3 tmpSocketVector = new Vector3();
 
+    public boolean pressed = false;
+
     public void preAddSocket(Vector3 screen) {
-        if (shouldAdd) {
-            tmpSocketVector.set(screen);
-            addNewSocketFlag = true;
-            addNewSocketToPolygonFlag = false;
-        }
-        if (polygonModify) {
-            tmpSocketVector.set(screen);
-            addNewSocketToPolygonFlag = true;
-            addNewSocketFlag = false;
-        }
+        pressed = true;
+        tmpSocketVector.set(screen);
+//        if (shouldAdd) {
+//
+//            addNewSocketFlag = true;
+//            addNewSocketToPolygonFlag = false;
+//        }
+//        if (shouldAddToPolygon) {
+//            tmpSocketVector.set(screen);
+//            addNewSocketToPolygonFlag = true;
+//            addNewSocketFlag = false;
+//        }
     }
 
     public void addNewSocket() {
         BasePicture currentPicture = getMainPicture();
         if (currentPicture == null) {
-            addNewSocketFlag = false;
             return;
         }
         OrthographicCamera mainCamera = MainGame.getInstance().getCameraManager().getMainCamera();
         mainCamera.unproject(tmpSocketVector);
         currentPicture.addNewSocket(tmpSocketVector);
-        addNewSocketFlag = false;
+
+        OperationStack operationStack = MainGame.getInstance().getOperationStack();
+        operationStack.addSocket(currentPicture, currentPicture.getSockets().size() - 1);
     }
 
     public void socketSelect(int socketIndex) {
@@ -96,13 +106,11 @@ public class BasePictureWareHouse {
     public void addNewSocketToPolygon() {
         final BasePolygon polygon = currentPolygon;
         if (polygon == null) {
-            addNewSocketToPolygonFlag = false;
             return;
         }
         OrthographicCamera mainCamera = MainGame.getInstance().getCameraManager().getMainCamera();
         mainCamera.unproject(tmpSocketVector);
         polygon.add(tmpSocketVector.x, tmpSocketVector.y);
-        addNewSocketToPolygonFlag = false;
     }
 
 
@@ -112,7 +120,7 @@ public class BasePictureWareHouse {
         }
         List<BasePolygon> basePolygons = mainPicture.getBasePolygons();
         String name = "polygon_" + (mainPicture.polygonIndexMax++);
-        BasePolygon polygon = new BasePolygon(name,mainPicture.x,mainPicture.y,mainPicture.x, mainPicture.y);
+        BasePolygon polygon = new BasePolygon(name, mainPicture.x, mainPicture.y, mainPicture.x, mainPicture.y);
         basePolygons.add(polygon);
     }
 }

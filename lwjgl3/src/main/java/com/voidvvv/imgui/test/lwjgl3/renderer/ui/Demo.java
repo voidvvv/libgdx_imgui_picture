@@ -24,6 +24,7 @@ public class Demo implements UIRender{
 
     ImageDetailPanel pointsPanel = new ImageDetailPanel();
     public Demo() {
+
     }
 
     public void render () {

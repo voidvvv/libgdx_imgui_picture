@@ -8,10 +8,13 @@ import com.voidvvv.imgui.test.manager.CameraController;
 import com.voidvvv.imgui.test.manager.CameraManager;
 import com.voidvvv.imgui.test.manager.DrawManager;
 import com.voidvvv.imgui.test.manager.InputManager;
+import com.voidvvv.imgui.test.operations.OperationStack;
 import com.voidvvv.imgui.test.sreen.mainscreen.MainScreen;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class MainGame extends Game {
+    OperationStack operationStack;
+
     private int frameId;
     public static final String BASIC_FONT_NAME = "font/yizi/yizi.fnt";
 
@@ -56,6 +59,8 @@ public class MainGame extends Game {
         assetManager = new AssetManager();
         cameraController = new CameraController();
         inputManager = new InputManager();
+
+        operationStack = new OperationStack();
     }
 
     public CameraController getCameraController() {
@@ -105,6 +110,10 @@ public class MainGame extends Game {
     public void resize(int width, int height) {
         super.resize(width, height);
         this.cameraManager.resize(width, height);
+    }
+
+    public OperationStack getOperationStack() {
+        return operationStack;
     }
 
     public int getFrameId() {
