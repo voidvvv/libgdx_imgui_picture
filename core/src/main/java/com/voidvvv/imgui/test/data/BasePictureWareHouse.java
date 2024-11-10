@@ -113,7 +113,6 @@ public class BasePictureWareHouse {
         polygon.add(tmpSocketVector.x, tmpSocketVector.y);
     }
 
-
     public void addPolygon() {
         if (this.mainPicture == null) {
             return;

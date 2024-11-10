@@ -4,15 +4,15 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
 import com.voidvvv.imgui.test.asset.BasePictureRender;
 import com.voidvvv.imgui.test.data.BasePictureWareHouse;
-import com.voidvvv.imgui.test.manager.CameraController;
-import com.voidvvv.imgui.test.manager.CameraManager;
-import com.voidvvv.imgui.test.manager.DrawManager;
-import com.voidvvv.imgui.test.manager.InputManager;
+import com.voidvvv.imgui.test.manager.*;
 import com.voidvvv.imgui.test.operations.OperationStack;
 import com.voidvvv.imgui.test.sreen.mainscreen.MainScreen;
 
 /** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class MainGame extends Game {
+
+    StatusManager statusManager;
+
     OperationStack operationStack;
 
     private int frameId;
@@ -61,6 +61,15 @@ public class MainGame extends Game {
         inputManager = new InputManager();
 
         operationStack = new OperationStack();
+        statusManager = new StatusManager();
+    }
+
+    public StatusManager getStatusManager() {
+        return statusManager;
+    }
+
+    public void setStatusManager(StatusManager statusManager) {
+        this.statusManager = statusManager;
     }
 
     public CameraController getCameraController() {

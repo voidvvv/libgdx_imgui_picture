@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.data.BasePictureWareHouse;
+import com.voidvvv.imgui.test.data.PolygonStatus;
 import com.voidvvv.imgui.test.entity.BasePicture;
 import com.voidvvv.imgui.test.entity.BasePolygon;
 import com.voidvvv.imgui.test.entity.BaseSocket;
@@ -35,8 +36,19 @@ public class BasePictureRender {
 
         // reset
         basePictureWareHouse.pressed = false;
+
+        polygonStatusUpdate();
     }
 
+    private void polygonStatusUpdate() {
+        BasePictureWareHouse basePictureWareHouse = MainGame.getInstance().getBasePictureWareHouse();
+
+        PolygonStatus polygonStatus = MainGame.getInstance().getStatusManager().getPolygonStatus();
+        if (polygonStatus.status == PolygonStatus.POLYGON_ENTER_ADDING_STATUS) {
+            basePictureWareHouse.addPolygon();
+            polygonStatus.editingPolygon();
+        }
+    }
 
 
     public void render() {
@@ -84,25 +96,38 @@ public class BasePictureRender {
         shapeRenderer.end();
     }
 
+    List<BasePolygon> completeList = new ArrayList<>();
+    List<BasePolygon> incompleteList = new ArrayList<>();
+
     private void renderRects(ShapeRenderer shapeRenderer, BasePicture basePicture) {
         Camera camera = MainGame.getInstance().getCameraManager().getMainCamera();
-        prepareForShape(shapeRenderer, camera);
-
+        completeList.clear();
+        incompleteList.clear();
         for (int i = 0; i < basePicture.getBasePolygons().size(); i++) {
             BasePolygon basePolygon = basePicture.getBasePolygons().get(i);
             if (basePolygon.complete()) {
-                float[] transformedVertices = basePolygon.getTransformedVertices();
-                shapeRenderer.polygon(transformedVertices);
+                completeList.add(basePolygon);
+            } else  {
+//                MainGame.getInstance().getDrawManager().getIncompletePolygonRender().render(basePolygon, shapeRenderer);
+                incompleteList.add(basePolygon);
             }
         }
-        shapeRenderer.end();
+        if (!completeList.isEmpty()) {
+            IncompletePolygonRender incompletePolygonRender = MainGame.getInstance().getDrawManager().getIncompletePolygonRender();
+
+            //
+            for (BasePolygon basePolygon : completeList) {
+                incompletePolygonRender.render(basePolygon);
+            }
+        }
+
     }
 
     private void prepareForShape(ShapeRenderer shapeRenderer, Camera camera) {
         shapeRenderer.setAutoShapeType(true);
         shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.begin();
-        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
+        shapeRenderer.setColor(Color.GOLD);
+//        shapeRenderer.set(ShapeRenderer.ShapeType.Filled);
     }
 
     private void renderRect(BaseSocket key, BasePolygon rect, ShapeRenderer shapeRenderer) {
