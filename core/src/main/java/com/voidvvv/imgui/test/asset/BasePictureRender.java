@@ -3,9 +3,11 @@ package com.voidvvv.imgui.test.asset;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.data.BasePictureWareHouse;
 import com.voidvvv.imgui.test.data.PolygonStatus;
@@ -18,12 +20,12 @@ import com.voidvvv.imgui.test.manager.CameraManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BasePictureRender {
+public class BasePictureRender extends Actor {
 
     PageData pageData = new PageData();
 
 
-    public void update(float delta) {
+    public void act(float delta) {
         BasePictureWareHouse basePictureWareHouse = MainGame.getInstance().getBasePictureWareHouse();
         boolean pressed = basePictureWareHouse.pressed;
         if (pressed) {
@@ -50,6 +52,10 @@ public class BasePictureRender {
         }
     }
 
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        this.render();
+    }
 
     public void render() {
 //        renderPenal();

@@ -25,7 +25,7 @@ public class BasePolygon extends Polygon {
         this.setPosition(x,y);
         this.setOrigin(originX,originY);
         mesh = new Mesh(true,1000,2000, VertexAttribute.Position());
-
+        color.a = 0.3f;
     }
 
     public void add(float x, float y) {

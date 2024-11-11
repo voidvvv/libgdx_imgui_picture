@@ -15,10 +15,10 @@ public class MyCameraInputListener implements InputProcessor {
 
     public MyCameraInputListener(CameraController controller) {
         this.controller = controller;
-        InputProcessor inputProcessor = Gdx.input.getInputProcessor();
-        if (inputProcessor instanceof InputMultiplexer) {
-            ((InputMultiplexer) inputProcessor).addProcessor(this);
-        }
+//        InputProcessor inputProcessor = Gdx.input.getInputProcessor();
+//        if (inputProcessor instanceof InputMultiplexer) {
+//            ((InputMultiplexer) inputProcessor).addProcessor(this);
+//        }
     }
 
     @Override

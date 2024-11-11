@@ -1,17 +1,18 @@
-package com.voidvvv.imgui.test.sreen.mainscreen;
+package com.voidvvv.imgui.test.stage.components;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.voidvvv.imgui.test.MainGame;
-import com.voidvvv.imgui.test.base.DrawUpdatable;
 import com.voidvvv.imgui.test.data.MainScreenGroundData;
 
-public class BackGround implements DrawUpdatable {
+public class BackGround extends Actor {
     BitmapFont font;
     private int blendSrcFunc = GL20.GL_SRC_ALPHA;
     private int blendDstFunc = GL20.GL_ONE_MINUS_SRC_ALPHA;
@@ -41,10 +42,17 @@ public class BackGround implements DrawUpdatable {
     }
 
 
-    public void update(float delta) {
-        font = MainGame.getInstance().getAssetManager().get(MainGame.BASIC_FONT_NAME,BitmapFont.class);
+    public void act(float delta) {
+        super.act(delta);
+//        font = MainGame.getInstance().getAssetManager().get(MainGame.BASIC_FONT_NAME,BitmapFont.class);
         currentBatch = MainGame.getInstance().getDrawManager().getBaseBatch();
         resetOrigins();
+    }
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        super.draw(batch, parentAlpha);
+        this.draw();
     }
 
     public void draw() {

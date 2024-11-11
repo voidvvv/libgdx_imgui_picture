@@ -1,5 +1,6 @@
 package com.voidvvv.imgui.test.render;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -45,12 +46,17 @@ public class SimplePolygonRender{
 
 
     public void draw(BasePolygon basePolygon, Matrix4 transform) {
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFuncSeparate(GL20.GL_BLEND_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA, GL20.GL_BLEND_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+
         configColor(basePolygon);
         // prepare shader
         shaderProgram.bind();
         shaderProgram.setUniformMatrix("u_projTrans",transform);
         shaderProgram.setUniform4fv("u_color",color,0,4);
         basePolygon.getMesh().render(shaderProgram,GL20.GL_TRIANGLES);
+        Gdx.gl.glDisable(GL20.GL_BLEND);
+
     }
 
     private void configColor(BasePolygon basePolygon) {

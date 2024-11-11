@@ -2,6 +2,7 @@ package com.voidvvv.imgui.test;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.voidvvv.imgui.test.asset.BasePictureRender;
 import com.voidvvv.imgui.test.data.BasePictureWareHouse;
 import com.voidvvv.imgui.test.manager.*;
@@ -46,6 +47,7 @@ public class MainGame extends Game {
     @Override
     public void render() {
         frameId++;
+
         super.render();
     }
 
@@ -89,9 +91,12 @@ public class MainGame extends Game {
     }
 
     Screen screen;
+
+    InputMultiplexer inputProcessor ;
     @Override
     public void create() {
-        Gdx.input.setInputProcessor(new InputMultiplexer());
+        inputProcessor = new InputMultiplexer();
+        Gdx.input.setInputProcessor(inputProcessor);
 
         frameId = 0;
         cameraManager.init();
@@ -127,5 +132,9 @@ public class MainGame extends Game {
 
     public int getFrameId() {
         return frameId;
+    }
+
+    public void addInputListener(InputProcessor processor) {
+        inputProcessor.addProcessor(processor);
     }
 }

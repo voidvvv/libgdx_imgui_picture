@@ -1,13 +1,14 @@
-package com.voidvvv.imgui.test.sreen.mainscreen;
+package com.voidvvv.imgui.test.stage.components;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.voidvvv.imgui.test.MainGame;
-import com.voidvvv.imgui.test.base.DrawUpdatable;
 import com.voidvvv.imgui.test.data.MainScreenGroundData;
 
-public class ForeGround  implements DrawUpdatable {
+public class ForeGround  extends Actor {
     private SpriteBatch currentBatch;
     MainGame instance = MainGame.getInstance();
     MainScreenGroundData data;
@@ -17,13 +18,17 @@ public class ForeGround  implements DrawUpdatable {
     }
 
     @Override
-    public void update(float delta) {
+    public void act(float delta) {
         font = MainGame.getInstance().getAssetManager().get(MainGame.BASIC_FONT_NAME,BitmapFont.class);
         currentBatch = MainGame.getInstance().getDrawManager().getBaseBatch();
 
     }
 
     @Override
+    public void draw(Batch batch, float parentAlpha) {
+        this.draw();
+    }
+
     public void draw() {
         renderText();
     }

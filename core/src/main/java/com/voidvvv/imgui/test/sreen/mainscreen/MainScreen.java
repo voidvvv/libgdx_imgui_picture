@@ -1,5 +1,6 @@
 package com.voidvvv.imgui.test.sreen.mainscreen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -7,30 +8,28 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.asset.BasePictureRender;
 import com.voidvvv.imgui.test.data.MainScreenGroundData;
 import com.voidvvv.imgui.test.manager.CameraController;
+import com.voidvvv.imgui.test.stage.MainRoot;
+import com.voidvvv.imgui.test.stage.MainStage;
 
 public class MainScreen implements Screen {
+    MainStage mainStage;
 
-    private SpriteBatch batch;
-    private Texture image;
-    OrthographicCamera camera;
-    BackGround backGround;
-    MainScreenGroundData data;
-    ForeGround foreGround;
     @Override
     public void show() {
-        data = new MainScreenGroundData();
-        batch = new SpriteBatch();
-        image = new Texture("libgdx.png");
+        // init stage
+        MainRoot mainRoot = new MainRoot();
+        mainRoot.init();
+        mainStage = new MainStage(new ScreenViewport(MainGame.getInstance().getCameraManager().getMainCamera()));
+        mainStage.setRoot(mainRoot);
 
-        camera = new OrthographicCamera();
-        backGround = new BackGround(data);
-        foreGround = new ForeGround(data);
-//        camera.position.set(0,0,0);
-//        camera.update();
+        MainGame.getInstance().addInputListener(mainStage);
+
+        // initial asset
         AssetManager assetManager = MainGame.getInstance().getAssetManager();
         assetManager.load("font/yizi/yizi.png",Texture.class);
         assetManager.load(MainGame.BASIC_FONT_NAME, BitmapFont.class);
@@ -41,25 +40,15 @@ public class MainScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        ScreenUtils.clear(0.5f,0.5f,0.5f,1f);
         MainGame.getInstance().getCameraManager().update(delta);
-        BasePictureRender basePictureRender = MainGame.getInstance().getBasePictureRender();
-        basePictureRender.update(delta);
-        backGround.update(delta);
-        foreGround.update(delta);
-        // draw
-        ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-        // back ground
-        backGround.draw();
-        // picture
-        basePictureRender.render();
-        foreGround.draw();
+        mainStage.act(delta);
+        mainStage.draw();
     }
 
 
     @Override
     public void resize(int width, int height) {
-        camera.setToOrtho(false, 640, 480);
-        camera.update();
     }
 
     @Override
@@ -79,7 +68,6 @@ public class MainScreen implements Screen {
 
     @Override
     public void dispose() {
-        batch.dispose();
-        image.dispose();
+        mainStage.dispose();
     }
 }
