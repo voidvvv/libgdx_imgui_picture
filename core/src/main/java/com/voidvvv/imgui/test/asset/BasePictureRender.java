@@ -77,8 +77,8 @@ public class BasePictureRender extends Actor {
 
     public void render (SpriteBatch batch, ShapeRenderer shapeRenderer, BasePicture basePicture) {
         drawBasePicture(batch,basePicture);
-        renderSockets(shapeRenderer, basePicture);
-        renderRects(shapeRenderer, basePicture);
+//        renderSockets(shapeRenderer, basePicture);
+//        renderRects(shapeRenderer, basePicture);
     }
 
     private void drawBasePicture(SpriteBatch batch, BasePicture basePicture) {

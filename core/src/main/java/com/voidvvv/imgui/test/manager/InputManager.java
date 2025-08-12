@@ -9,9 +9,9 @@ import com.voidvvv.imgui.test.input.MyCameraInputListener;
 
 public class InputManager {
     public void init () {
-        new MyCameraInputListener(MainGame.getInstance().getCameraController());
-        BasePictureInputListener basePictureInputListener = new BasePictureInputListener();
-        addInputProcessor(basePictureInputListener);
+        MyCameraInputListener myCameraInputListener = new MyCameraInputListener(MainGame.getInstance().getCameraController());
+//        BasePictureInputListener basePictureInputListener = new BasePictureInputListener();
+        addInputProcessor(myCameraInputListener);
     }
 
     public void addInputProcessor(InputProcessor in) {

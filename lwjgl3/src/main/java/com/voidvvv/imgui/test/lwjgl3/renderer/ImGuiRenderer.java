@@ -5,6 +5,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Graphics;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.voidvvv.imgui.test.lwjgl3.renderer.frame.FrameUI;
 import com.voidvvv.imgui.test.lwjgl3.renderer.ui.Demo;
 import com.voidvvv.imgui.test.lwjgl3.renderer.ui.UIRender;
 import imgui.ImGui;
@@ -62,7 +63,7 @@ public class ImGuiRenderer extends Game {
     public void create() {
         this.game.create();
         initImGui();
-        uiRender = new Demo();
+        uiRender = new FrameUI();
         bitmapFont = new BitmapFont();
         sb = new SpriteBatch();
 

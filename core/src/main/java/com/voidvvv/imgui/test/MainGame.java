@@ -36,6 +36,8 @@ public class MainGame extends Game {
 
     InputManager inputManager;
 
+    FrameDataManager frameDataManager;
+
 
     public static MainGame getInstance() {
         if (Instance == null) {
@@ -64,6 +66,7 @@ public class MainGame extends Game {
 
         operationStack = new OperationStack();
         statusManager = new StatusManager();
+        frameDataManager = new FrameDataManager();
     }
 
     public StatusManager getStatusManager() {
@@ -103,9 +106,15 @@ public class MainGame extends Game {
         drawManager.init();
         basePictureRender.init();
         inputManager.init();
+        frameDataManager.init();
 //        basePictureRender.init();
 //        basePictureWareHouse.init();
         setScreen(screen);
+
+    }
+
+    public FrameDataManager getFrameDataManager() {
+        return frameDataManager;
     }
 
     public BasePictureWareHouse getBasePictureWareHouse() {

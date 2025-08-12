@@ -52,7 +52,9 @@ public class BackGround extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
+        batch.end();
         this.draw();
+        batch.begin();
     }
 
     public void draw() {
@@ -67,29 +69,20 @@ public class BackGround extends Actor {
         OrthographicCamera mainCamera = instance.getCameraManager().getMainCamera();
         OrthographicCamera screenCamera = instance.getCameraManager().getScreenCamera();
 
-        shapeRenderer.setProjectionMatrix(mainCamera.combined);
         shapeRenderer.setColor(lineColor);
+        shapeRenderer.setProjectionMatrix(mainCamera.combined);
+
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         // origin pot
-        tmpColor.set(shapeRenderer.getColor());
-        shapeRenderer.setColor(originColor);
-        shapeRenderer.circle(this.data.originPoint.x, this.data.originPoint.y, 20f);
-        shapeRenderer.setColor(tmpColor);
-        // x positive
-        shapeRenderer.rectLine(0f, this.data.originPoint.y, Gdx.graphics.getWidth(), this.data.originPoint.y, 1f);
 
-        // y positive
-        shapeRenderer.rectLine(this.data.originPoint.x, 0f, this.data.originPoint.x, Gdx.graphics.getHeight(), 1f);
+        // x positive
+//        shapeRenderer.rectLine(0f, this.data.originPoint.y, Gdx.graphics.getWidth(), this.data.originPoint.y, 1f);
+//
+//        // y positive
+//        shapeRenderer.rectLine(this.data.originPoint.x, 0f, this.data.originPoint.x, Gdx.graphics.getHeight(), 1f);
         // render position point
         // x positive
-        float xStart = this.data.originPoint.x < 0 ? (this.data.unit - (Math.abs(this.data.originPoint.x) % this.data.unit)) : this.data.originPoint.x;
-        int n = (int) Math.abs((xStart - this.data.originPoint.x) / this.data.unit);
-        float xEnd = Gdx.graphics.getWidth();
 
-        while (xStart <= xEnd) {
-            shapeRenderer.rect(xStart, this.data.originPoint.y, 5f, 5f);
-            xStart += this.data.unit;
-        }
 
         // draw lines
         float s = this.data.xs;

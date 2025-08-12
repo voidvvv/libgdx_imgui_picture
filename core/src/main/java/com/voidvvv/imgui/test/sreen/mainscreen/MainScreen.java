@@ -24,7 +24,8 @@ public class MainScreen implements Screen {
         // init stage
         MainRoot mainRoot = new MainRoot();
         mainRoot.init();
-        mainStage = new MainStage(new ScreenViewport(MainGame.getInstance().getCameraManager().getMainCamera()));
+        mainStage = new MainStage(new ScreenViewport(MainGame.getInstance().getCameraManager().getMainCamera()),
+            MainGame.getInstance().getDrawManager().getBaseBatch());
         mainStage.setRoot(mainRoot);
 
         MainGame.getInstance().addInputListener(mainStage);

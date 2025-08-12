@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.asset.BasePictureRender;
 import com.voidvvv.imgui.test.data.MainScreenGroundData;
+import com.voidvvv.imgui.test.render.FrameRender;
 import com.voidvvv.imgui.test.stage.components.BackGround;
 import com.voidvvv.imgui.test.stage.components.ForeGround;
 
@@ -16,13 +17,12 @@ public class MainRoot extends Group {
     }
 
     public void init () {
-        BasePictureRender basePictureRender = MainGame.getInstance().getBasePictureRender();
-
+        FrameRender frameRender = new FrameRender();
         data = new MainScreenGroundData();
         backGround = new BackGround(data);
         foreGround = new ForeGround(data);
         addActor(backGround);
-        addActor(basePictureRender);
+        addActor(frameRender);
         addActor(foreGround);
     }
 }
