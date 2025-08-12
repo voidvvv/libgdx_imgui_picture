@@ -8,10 +8,13 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.entity.frame.AttackCheck;
 import com.voidvvv.imgui.test.entity.frame.FrameData;
+import com.voidvvv.imgui.test.input.FrameDataRenderListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +22,37 @@ import java.util.List;
 public class FrameRender extends Actor {
     FrameData frameData;
     List<Color> attackFrameColors = new ArrayList<>();
+
+    public FrameRender() {
+        setName("FrameRender");
+        setSize(100, 100);
+        setPosition(0, 0);
+        frameData = MainGame.getInstance().getFrameDataManager().getCurrentFrameData();
+        if (frameData != null) {
+            setBounds(
+                frameData.getRenderOffset().x,
+                frameData.getRenderOffset().y,
+                frameData.getTextureRegion().getRegionWidth(),
+                frameData.getTextureRegion().getRegionHeight()
+            );
+        }
+        addListener(new FrameDataRenderListener());
+    }
+
     @Override
     public void act(float delta) {
         super.act(delta);
         frameData = MainGame.getInstance().getFrameDataManager().getCurrentFrameData();
+
         if (frameData == null) {
             return;
         }
+        setBounds(
+            frameData.getRenderOffset().x,
+            frameData.getRenderOffset().y,
+            frameData.getTextureRegion().getRegionWidth(),
+            frameData.getTextureRegion().getRegionHeight()
+        );
         List<AttackCheck> attackCheckRects = frameData.getAttackCheckRects();
         while (attackFrameColors.size() < attackCheckRects.size()) {
             newColor();

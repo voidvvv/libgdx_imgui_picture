@@ -50,6 +50,7 @@ public class MainScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
+        mainStage.getViewport().update(width, height);
     }
 
     @Override

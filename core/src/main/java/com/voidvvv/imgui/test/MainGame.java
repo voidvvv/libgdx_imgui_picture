@@ -38,6 +38,8 @@ public class MainGame extends Game {
 
     FrameDataManager frameDataManager;
 
+    DebugManager debugManager = new DebugManager();
+
 
     public static MainGame getInstance() {
         if (Instance == null) {
@@ -111,6 +113,10 @@ public class MainGame extends Game {
 //        basePictureWareHouse.init();
         setScreen(screen);
 
+    }
+
+    public DebugManager getDebugManager() {
+        return debugManager;
     }
 
     public FrameDataManager getFrameDataManager() {
