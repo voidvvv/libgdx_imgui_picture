@@ -15,7 +15,7 @@ public class FrameDataRenderListener extends InputListener {
     public boolean mouseMoved(InputEvent event, float x, float y) {
 
         lastPos.set(x, y);
-        MainGame.getInstance().getDebugManager().pushMsg("mouseMoved: " + x + ", " + y);
+//        MainGame.getInstance().getDebugManager().pushMsg("mouseMoved: " + x + ", " + y);
         return super.mouseMoved(event, x, y);
     }
 

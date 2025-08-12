@@ -15,13 +15,15 @@ import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.entity.frame.AttackCheck;
 import com.voidvvv.imgui.test.entity.frame.FrameData;
 import com.voidvvv.imgui.test.input.FrameDataRenderListener;
+import com.voidvvv.imgui.test.manager.FrameAttackCheckColorManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FrameRender extends Actor {
     FrameData frameData;
-    List<Color> attackFrameColors = new ArrayList<>();
+
+    FrameAttackCheckColorManager colorManager;
 
     public FrameRender() {
         setName("FrameRender");
@@ -43,7 +45,7 @@ public class FrameRender extends Actor {
     public void act(float delta) {
         super.act(delta);
         frameData = MainGame.getInstance().getFrameDataManager().getCurrentFrameData();
-
+        colorManager = MainGame.getInstance().getColorManager();
         if (frameData == null) {
             return;
         }
@@ -54,9 +56,10 @@ public class FrameRender extends Actor {
             frameData.getTextureRegion().getRegionHeight()
         );
         List<AttackCheck> attackCheckRects = frameData.getAttackCheckRects();
-        while (attackFrameColors.size() < attackCheckRects.size()) {
-            newColor();
-        }
+        // attackCheckRects.size()
+        colorManager.newColorUntil(
+            attackCheckRects.size()
+        );
     }
 
     @Override
@@ -77,9 +80,8 @@ public class FrameRender extends Actor {
     }
 
     private void drawAttackRect(List<AttackCheck> attackCheckRects) {
-
-//        Gdx.gl.glEnable(GL20.GL_BLEND);
-//        Gdx.gl.glBlendFunc(com.badlogic.gdx.graphics.GL20.GL_SRC_ALPHA, com.badlogic.gdx.graphics.GL20.GL_ONE_MINUS_SRC_ALPHA);
+        Gdx.gl.glEnable(GL20.GL_BLEND);
+        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         ShapeRenderer shapeRenderer = MainGame.getInstance().getDrawManager().getShapeRenderer();
         shapeRenderer.setAutoShapeType(true);
         shapeRenderer.setProjectionMatrix(MainGame.getInstance().getCameraManager().getMainCamera().combined);
@@ -89,7 +91,7 @@ public class FrameRender extends Actor {
                 AttackCheck attackCheck = attackCheckRects.get(i);
                 Rectangle rectangle = attackCheck.rectangle;
 
-                Color color = attackFrameColors.get(i);
+                Color color = colorManager.getColor(i);
                 // fill rect
                 color.a = 0.3f;
                 shapeRenderer.setColor(color);
@@ -114,29 +116,8 @@ public class FrameRender extends Actor {
             }
         }
         shapeRenderer.end();
-//        Gdx.gl.glDisable(GL20.GL_BLEND);
+        Gdx.gl.glDisable(GL20.GL_BLEND);
 
     }
 
-    private void newColor() {
-        if (attackFrameColors.isEmpty()) {
-            attackFrameColors.add(Color.BLUE.cpy());
-        } else {
-            Color lastColor = attackFrameColors.get(attackFrameColors.size() - 1);
-            Color newColor = new Color(lastColor);
-            newColor.r += 0.1f;
-            if (newColor.r > 1f) {
-                newColor.r = 0f;
-                newColor.g += 0.1f;
-                if (newColor.g > 1f) {
-                    newColor.g = 0f;
-                    newColor.b += 0.1f;
-                    if (newColor.b > 1f) {
-                        newColor.b = 0f;
-                    }
-                }
-            }
-            attackFrameColors.add(newColor);
-        }
-    }
 }

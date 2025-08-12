@@ -14,7 +14,7 @@ public class DebugManager {
 
 
     public void pushMsg (String msg) {
-        System.out.println("DebugManager pushMsg: " + msg);
+//        System.out.println("DebugManager pushMsg: " + msg);
         debugMessages.offerLast(msg);
         while ((++size) >= capacity) {
             debugMessages.pollFirst();

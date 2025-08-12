@@ -40,6 +40,8 @@ public class MainGame extends Game {
 
     DebugManager debugManager = new DebugManager();
 
+    FrameAttackCheckColorManager colorManager;
+
 
     public static MainGame getInstance() {
         if (Instance == null) {
@@ -69,6 +71,11 @@ public class MainGame extends Game {
         operationStack = new OperationStack();
         statusManager = new StatusManager();
         frameDataManager = new FrameDataManager();
+        colorManager = new FrameAttackCheckColorManager();
+    }
+
+    public FrameAttackCheckColorManager getColorManager() {
+        return colorManager;
     }
 
     public StatusManager getStatusManager() {

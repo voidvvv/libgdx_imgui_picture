@@ -5,6 +5,7 @@ import com.voidvvv.imgui.test.lwjgl3.renderer.ui.UIRender;
 import com.voidvvv.imgui.test.manager.DebugManager;
 import imgui.ImGui;
 import imgui.flag.ImGuiKey;
+import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImBoolean;
 
 public class DebugMessagePenal implements UIRender {
@@ -13,7 +14,7 @@ public class DebugMessagePenal implements UIRender {
     @Override
     public void render() {
         if (open.get()) {
-            if (ImGui.begin("Debug Messages", open)) {
+            if (ImGui.begin("Debug Messages", open, ImGuiWindowFlags.AlwaysAutoResize)) {
                 ImGui.text("Debug Messages");
                 ImGui.separator();
                 ImGui.beginChild("##debugMessages", 0, 200, true);

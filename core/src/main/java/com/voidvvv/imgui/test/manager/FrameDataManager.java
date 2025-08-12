@@ -31,6 +31,7 @@ public class FrameDataManager {
     }
 
     private void initFrameData(String path) {
+        currentFrameData = null;
         TextureRegion tr = new TextureRegion(new Texture(Gdx.files.absolute(path)));
         currentFrameData = new FrameData();
         currentFrameData.setTextureRegion(tr);
