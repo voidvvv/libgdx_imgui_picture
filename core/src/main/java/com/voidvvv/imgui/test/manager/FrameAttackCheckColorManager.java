@@ -28,20 +28,20 @@ public class FrameAttackCheckColorManager {
     public int size() {
         return attackFrameColors.size();
     }
-
+    float step = 0.2f;
     private void newColor() {
         if (attackFrameColors.isEmpty()) {
             attackFrameColors.add(Color.BLUE.cpy());
         } else {
             Color lastColor = attackFrameColors.get(attackFrameColors.size() - 1);
             Color newColor = new Color(lastColor);
-            newColor.r += 0.1f;
+            newColor.r += step;
             if (newColor.r > 1f) {
                 newColor.r = 0f;
-                newColor.g += 0.1f;
+                newColor.g += step;
                 if (newColor.g > 1f) {
                     newColor.g = 0f;
-                    newColor.b += 0.1f;
+                    newColor.b += step;
                     if (newColor.b > 1f) {
                         newColor.b = 0f;
                     }

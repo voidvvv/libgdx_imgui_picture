@@ -22,6 +22,7 @@ public class FileOperaPanel implements UIRender {
     final static String TIP_ERROR = "Path illegal, please input a valid path";
 
     ImString filePath = new ImString();
+
     @Override
     public void render() {
         if (open.get()) {
@@ -44,6 +45,7 @@ public class FileOperaPanel implements UIRender {
             loadFile = false;
         }
     }
+
     boolean edit = true;
 
     ImFloat renderOffsetX = new ImFloat(0);
@@ -51,6 +53,7 @@ public class FileOperaPanel implements UIRender {
     ImFloat durationTime = new ImFloat(0);
 
     ImString tip = new ImString(TIP_DEFAULT);
+
     private void detailTmp() {
         FrameData currentFrameData = MainGame.getInstance().getFrameDataManager().getCurrentFrameData();
 
@@ -86,10 +89,12 @@ public class FileOperaPanel implements UIRender {
             ImGui.text(tip.get());
         }
     }
-    ImFloat tmpX = new ImFloat(0);
-    ImFloat tmpY = new ImFloat(0);
-    ImFloat tmpW = new ImFloat(50);
-    ImFloat tmpH = new ImFloat(50);
+
+    float[] tmpXArr = new float[]{0.0f};
+    float[] tmpYArr = new float[]{0.0f};
+    float[] tmpWArr = new float[]{0.0f};
+    float[] tmpHArr = new float[]{0.0f};
+
     private void rectList(FrameData currentFrameData) {
         if (ImGui.beginChild("rectList", ImGuiWindowFlags.AlwaysAutoResize)) {
             FrameAttackCheckColorManager colorManager = MainGame.getInstance().getColorManager();
@@ -97,7 +102,8 @@ public class FileOperaPanel implements UIRender {
                 com.voidvvv.imgui.test.entity.frame.AttackCheck attackCheck = currentFrameData.getAttackCheckRects().get(i);
                 ImGui.pushID(i);
                 Color color = colorManager.getColor(i);
-                ImGui.colorButton("rect " + i, color.r, color.g, color.b, 1f, ImGuiColorEditFlags.NoTooltip);
+                colorSpecify(i, color);
+                //                 ImGui.colorButton("rect " + i, color.r, color.g, color.b, 1f, ImGuiColorEditFlags.NoTooltip);
                 ImGui.text("rect " + i);
                 ImGui.sameLine();
                 if (ImGui.button("remove")) {
@@ -106,21 +112,39 @@ public class FileOperaPanel implements UIRender {
                     break;
                 }
                 Rectangle rectangle = attackCheck.rectangle;
-                tmpX.set(rectangle.x);
-                tmpY.set(rectangle.y);
-                tmpW.set(rectangle.width);
-                tmpH.set(rectangle.height);
-                ImGui.inputFloat("x", tmpX);
-                ImGui.inputFloat("y", tmpY);
-                ImGui.inputFloat("w", tmpW);
-                ImGui.inputFloat("h", tmpH);
+                tmpXArr[0] = rectangle.x;
+                tmpYArr[0] = rectangle.y;
+                tmpWArr[0] = rectangle.width;
+                tmpHArr[0] = rectangle.height;
+                ImGui.dragFloat("x", tmpXArr,0.5f);
+                ImGui.dragFloat("y", tmpYArr,0.5f);
+                ImGui.dragFloat("width", tmpWArr,0.5f,1f);
+                ImGui.dragFloat("height", tmpHArr,0.5f,1f);
                 ImGui.separator();
                 ImGui.popID();
+                rectangle.x = tmpXArr[0];
+                rectangle.y = tmpYArr[0];
+                rectangle.width = tmpWArr[0];
+                rectangle.height = tmpHArr[0];
             }
             ImGui.endChild();
 
         }
 
+    }
+    float[] pickColor = new float[3];
+    private void colorSpecify(int i, Color color) {
+        pickColor[0] = color.r;
+        pickColor[1] = color.g;
+        pickColor[2] = color.b;
+        if (ImGui.colorButton("rect " + i, color.r, color.g, color.b, 1f, ImGuiColorEditFlags.NoTooltip)) {
+            boolean b = ImGui.colorPicker3("change color", pickColor);
+            if (b) {
+                color.r = pickColor[0];
+                color.g = pickColor[1];
+                color.b = pickColor[2];
+            }
+        }
     }
 
     private void addNewRectButton(FrameData currentFrameData) {
@@ -131,6 +155,7 @@ public class FileOperaPanel implements UIRender {
     }
 
     boolean loadFile = false;
+
     void update() {
         openFlag();
         loadFileFromPath();
