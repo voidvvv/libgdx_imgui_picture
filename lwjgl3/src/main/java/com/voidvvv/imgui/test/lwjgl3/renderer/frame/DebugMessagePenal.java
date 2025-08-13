@@ -14,10 +14,10 @@ public class DebugMessagePenal implements UIRender {
     @Override
     public void render() {
         if (open.get()) {
-            if (ImGui.begin("Debug Messages", open, ImGuiWindowFlags.AlwaysAutoResize)) {
+            if (ImGui.begin("Debug Messages", open)) {
                 ImGui.text("Debug Messages");
                 ImGui.separator();
-                ImGui.beginChild("##debugMessages", 0, 200, true);
+                ImGui.beginChild("##debugMessages", 0, 200, true, ImGuiWindowFlags.AlwaysAutoResize);
                 DebugManager debugManager = MainGame.getInstance().getDebugManager();
                 // Render debug messages
                 for (String msg : debugManager.debugMessages) {

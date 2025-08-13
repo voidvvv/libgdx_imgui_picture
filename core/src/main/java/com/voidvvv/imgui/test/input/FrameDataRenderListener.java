@@ -14,7 +14,7 @@ public class FrameDataRenderListener extends InputListener {
     @Override
     public boolean mouseMoved(InputEvent event, float x, float y) {
 
-        lastPos.set(x, y);
+//        lastPos.set(x, y);
 //        MainGame.getInstance().getDebugManager().pushMsg("mouseMoved: " + x + ", " + y);
         return super.mouseMoved(event, x, y);
     }
@@ -38,7 +38,7 @@ public class FrameDataRenderListener extends InputListener {
     public void touchDragged(InputEvent event, float x, float y, int pointer) {
         FrameData currentFrameData = MainGame.getInstance().getFrameDataManager().getCurrentFrameData();
         if (currentFrameData != null && drag) {
-//            MainGame.getInstance().getDebugManager().pushMsg("touchDragged: " + x + ", " + y);
+            MainGame.getInstance().getDebugManager().pushMsg("touchDragged: " + x + ", " + y);
 
             currentFrameData.getRenderOffset().set(
                 currentFrameData.getRenderOffset().x + x - lastPos.x,

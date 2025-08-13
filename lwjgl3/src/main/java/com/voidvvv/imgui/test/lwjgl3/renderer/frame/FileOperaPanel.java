@@ -39,6 +39,10 @@ public class FileOperaPanel implements UIRender {
 
     private void loadFilePenal() {
         ImGui.inputText("file", filePath);
+        ImGui.sameLine();
+        if (ImGui.button("openFileSys")) {
+            SystemFilePanel.OPEN = true;
+        }
         if (ImGui.button("load")) {
             loadFile = true;
         } else {
