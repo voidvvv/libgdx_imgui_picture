@@ -9,11 +9,17 @@ public class FrameUI implements UIRender {
 
     SystemFilePanel systemFilePanel = new SystemFilePanel();
 
+    static public final FramePanel framePanel = new FramePanel();
+
+    public static final AnimationPanel animationPanel = new AnimationPanel();
+
     @Override
     public void render() {
+
         fileOperaPanel.render();
         debugMessagePenal.render();
         systemFilePanel.render();
-
+        framePanel.render();
+        animationPanel.render();
     }
 }

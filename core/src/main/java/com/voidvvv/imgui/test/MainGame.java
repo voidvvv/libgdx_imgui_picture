@@ -42,6 +42,13 @@ public class MainGame extends Game {
 
     FrameAttackCheckColorManager colorManager;
 
+    AnimationManager animationManager;
+
+    AnimationPlayerManager animationPlayerManager;
+
+    public AnimationPlayerManager getAnimationPlayerManager() {
+        return animationPlayerManager;
+    }
 
     public static MainGame getInstance() {
         if (Instance == null) {
@@ -55,6 +62,7 @@ public class MainGame extends Game {
         frameId++;
 
         super.render();
+        animationPlayerManager.update(Gdx.graphics.getDeltaTime());
     }
 
     private MainGame() {
@@ -72,6 +80,12 @@ public class MainGame extends Game {
         statusManager = new StatusManager();
         frameDataManager = new FrameDataManager();
         colorManager = new FrameAttackCheckColorManager();
+        animationManager = new AnimationManager();
+        animationPlayerManager = new AnimationPlayerManager();
+    }
+
+    public AnimationManager getAnimationManager() {
+        return animationManager;
     }
 
     public FrameAttackCheckColorManager getColorManager() {
@@ -147,6 +161,8 @@ public class MainGame extends Game {
         super.resize(width, height);
         this.cameraManager.resize(width, height);
     }
+
+
 
     public OperationStack getOperationStack() {
         return operationStack;

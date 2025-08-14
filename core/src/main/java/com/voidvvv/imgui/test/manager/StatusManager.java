@@ -1,5 +1,6 @@
 package com.voidvvv.imgui.test.manager;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.voidvvv.imgui.test.data.PolygonStatus;
 
 public class StatusManager {
