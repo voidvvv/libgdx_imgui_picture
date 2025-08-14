@@ -25,13 +25,14 @@ public class AnimationPanel implements UIRender {
                 }
 
             }
+            ImGui.end();
         }
     }
 
     private boolean updateParam() {
         player = MainGame.getInstance().getAnimationPlayerManager().getAnimationPlayer();
         basicAnimation = MainGame.getInstance().getAnimationManager().getBasicAnimation();
-        show.set(MainGame.getInstance().getAnimationManager().getBasicAnimation() == null);
+        show.set(MainGame.getInstance().getAnimationManager().getBasicAnimation() != null);
         return show.get() && player != null && basicAnimation != null;
     }
 }

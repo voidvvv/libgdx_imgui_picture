@@ -2,6 +2,7 @@ package com.voidvvv.imgui.test;
 
 import com.badlogic.gdx.*;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.resolvers.AbsoluteFileHandleResolver;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.voidvvv.imgui.test.asset.BasePictureRender;
 import com.voidvvv.imgui.test.data.BasePictureWareHouse;
@@ -31,6 +32,7 @@ public class MainGame extends Game {
     BasePictureWareHouse basePictureWareHouse;
 
     AssetManager assetManager;
+    AssetManager absoluteAssetManager = new AssetManager(new AbsoluteFileHandleResolver());
 
     CameraController cameraController;
 
@@ -46,6 +48,8 @@ public class MainGame extends Game {
 
     AnimationPlayerManager animationPlayerManager;
 
+
+    SplitImageManager splitImageManager;
     public AnimationPlayerManager getAnimationPlayerManager() {
         return animationPlayerManager;
     }
@@ -82,6 +86,11 @@ public class MainGame extends Game {
         colorManager = new FrameAttackCheckColorManager();
         animationManager = new AnimationManager();
         animationPlayerManager = new AnimationPlayerManager();
+        splitImageManager = new SplitImageManager();
+    }
+
+    public SplitImageManager getSplitImageManager() {
+        return splitImageManager;
     }
 
     public AnimationManager getAnimationManager() {
@@ -162,7 +171,9 @@ public class MainGame extends Game {
         this.cameraManager.resize(width, height);
     }
 
-
+    public AssetManager getAbsoluteAssetManager() {
+        return absoluteAssetManager;
+    }
 
     public OperationStack getOperationStack() {
         return operationStack;

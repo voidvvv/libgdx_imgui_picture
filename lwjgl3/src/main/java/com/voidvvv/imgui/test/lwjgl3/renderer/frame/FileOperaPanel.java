@@ -1,8 +1,10 @@
 package com.voidvvv.imgui.test.lwjgl3.renderer.frame;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.entity.frame.FrameData;
@@ -75,10 +77,15 @@ public class FileOperaPanel implements UIRender {
                 s = "C:\\Users\\voidvvv\\Pictures\\asset\\card2.png";
                 filePath.set(s);
             }
+
             try {
-                FileHandle fh = Gdx.files.absolute("");
+                FileHandle fh = Gdx.files.absolute(s);
+
                 if (isPic(fh)) {
-//                    MainGame.getInstance().getAnimationManager().loadAnimByPic(fh);
+                    AssetManager assetManager = MainGame.getInstance().getAbsoluteAssetManager();
+                    assetManager.load(s, Texture.class);
+                    assetManager.finishLoading();
+                    MainGame.getInstance().getAnimationManager().loadAnimByPic(assetManager.get(s, Texture.class));
                 }
 
             } catch (Exception e) {

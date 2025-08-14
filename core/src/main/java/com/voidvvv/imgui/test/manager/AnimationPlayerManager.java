@@ -1,5 +1,6 @@
 package com.voidvvv.imgui.test.manager;
 
+import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.entity.anim.AnimationPlayer;
 
 public class AnimationPlayerManager {
@@ -20,6 +21,7 @@ public class AnimationPlayerManager {
     public void update(float deltaTime) {
         if (animationPlayer != null && animationPlayer.isPlaying()) {
             animationPlayer.update(deltaTime);
+            MainGame.getInstance().getFrameDataManager().setCurrentFrameData(animationPlayer.getCurrentFrame());
         }
     }
 }
