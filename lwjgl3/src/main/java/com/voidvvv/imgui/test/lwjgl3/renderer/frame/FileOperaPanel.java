@@ -49,8 +49,6 @@ public class FileOperaPanel implements UIRender {
         }
         if (ImGui.button("load")) {
             loadFile = true;
-        } else {
-            loadFile = false;
         }
     }
 
@@ -69,6 +67,11 @@ public class FileOperaPanel implements UIRender {
         if (ImGui.isKeyDown(ImGuiKey.LeftCtrl) && ImGui.isKeyPressed(ImGuiKey.A)) {
             open.set(true);
         }
+    }
+
+    public void tryLoad(String file) {
+        filePath.set(file);
+        loadFile = true;
     }
 
     private void loadFileFromPath() {
@@ -93,7 +96,7 @@ public class FileOperaPanel implements UIRender {
                     AssetManager assetManager = MainGame.getInstance().getAbsoluteAssetManager();
                     assetManager.load(s, TextureAtlas.class);
                     assetManager.finishLoading();
-                    MainGame.getInstance().getAnimationManager().loadAnimByAtlas(assetManager.get(s, TextureAtlas.class));
+                    MainGame.getInstance().getAnimationManager().loadAnimByAtlas(fh, assetManager.get(s, TextureAtlas.class));
 
                 }
 

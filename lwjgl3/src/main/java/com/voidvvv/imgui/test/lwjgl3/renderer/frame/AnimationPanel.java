@@ -9,6 +9,7 @@ import com.voidvvv.imgui.test.entity.frame.FrameData;
 import com.voidvvv.imgui.test.lwjgl3.renderer.ui.UIRender;
 import com.voidvvv.imgui.test.manager.AnimationManager;
 import imgui.ImGui;
+import imgui.ImVec4;
 import imgui.type.ImBoolean;
 
 public class AnimationPanel implements UIRender {
@@ -19,16 +20,37 @@ public class AnimationPanel implements UIRender {
     public void render() {
         if (updateParam()) {
             int frameCount = basicAnimation.getFrameCount();
+            int currentFrameIndex = player.getCurrentFrameIndex();
             ImGui.begin("Animation Panel", show);
+            playButton();
+            stopButton();
             for (int i = 0; i < frameCount; i++) {
-                if (ImGui.button(nameOfFrame(i))) {
-                    MainGame.getInstance().getFrameDataManager().setCurrentFrameData(
-                        basicAnimation.getFrame(i)
-                    );
+                if (frameButton(i, currentFrameIndex)) {
+                    MainGame.getInstance().getAnimationPlayerManager().specifyFrame(i);
                 }
 
             }
             ImGui.end();
+        }
+    }
+    ImVec4 color = new ImVec4(0.5f,0.5f, 0.5f, 1f);
+    private boolean frameButton(int i, int currentFrameIndex) {
+        if (i == currentFrameIndex) {
+            return
+                ImGui.colorButton(nameOfFrame(i),color);
+        }
+        return ImGui.button(nameOfFrame(i));
+    }
+
+    public void stopButton () {
+        if (ImGui.button("stop")) {
+            player.stop();
+        }
+    }
+
+    private void playButton() {
+        if (ImGui.button("Play")) {
+            player.play();
         }
     }
 

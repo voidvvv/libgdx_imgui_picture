@@ -3,6 +3,7 @@ package com.voidvvv.imgui.test.lwjgl3.renderer.frame;
 import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.lwjgl3.renderer.ui.UIRender;
 import imgui.ImGui;
+import imgui.flag.ImGuiKey;
 import imgui.type.ImBoolean;
 import imgui.type.ImString;
 
@@ -35,11 +36,8 @@ public class SystemFilePanel implements UIRender {
                 ImGui.inputText("Path", filePath);
                 ImGui.sameLine();
 
-                if (ImGui.button("Back")) {
-                    currentFile = currentFile.getParentFile();
-                    path = currentFile.getAbsolutePath();
-                    filePath.set(path);
-                }
+                backFunc();
+                enterKey();
                 ImGui.separator();
                 File[] files = currentFile.listFiles();
                 if (files != null) {
@@ -53,6 +51,9 @@ public class SystemFilePanel implements UIRender {
                                 // Handle file selection
                                 if (name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg")) {
                                     MainGame.getInstance().getFrameDataManager().setImg(file.getAbsolutePath());
+                                }else {
+
+                                    FrameUI.fileOperaPanel.tryLoad(file.getAbsolutePath());
                                 }
                             }
                         }
@@ -64,6 +65,29 @@ public class SystemFilePanel implements UIRender {
         }
 
 
+    }
+
+    private void enterKey() {
+        if (ImGui.isKeyPressed(ImGuiKey.Enter) || ImGui.isKeyPressed(ImGuiKey.KeyPadEnter) ) {
+            String s = filePath.get();
+            if (s == null || s.isEmpty()) {
+                return;
+            }
+            File file = new File(s);
+            if (file.exists() && file.isDirectory()) {
+                currentFile = file;
+                path = currentFile.getAbsolutePath();
+                filePath.set(path);
+            }
+        }
+    }
+
+    private void backFunc() {
+        if (ImGui.button("Back")) {
+            currentFile = currentFile.getParentFile();
+            path = currentFile.getAbsolutePath();
+            filePath.set(path);
+        }
     }
 
     private void updateFile() {

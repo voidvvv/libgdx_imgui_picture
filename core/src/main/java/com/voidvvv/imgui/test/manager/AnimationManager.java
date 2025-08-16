@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
+import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.entity.anim.BasicAnimation;
 import com.voidvvv.imgui.test.entity.frame.FrameData;
 
@@ -36,7 +37,7 @@ public class AnimationManager {
         basicAnimation = new BasicAnimation(frameData);
     }
 
-    public void loadAnimByAtlas(TextureAtlas textureAtlas) {
+    public void loadAnimByAtlas(FileHandle fh, TextureAtlas textureAtlas) {
         if (textureAtlas == null) {
             Gdx.app.error("AnimationManager", "TextureAtlas is null");
             return;
@@ -46,6 +47,7 @@ public class AnimationManager {
         for (TextureAtlas.AtlasRegion region : regions) {
             FrameData frameData = new FrameData();
             frameData.setTextureRegion(region);
+            frameData.setDurationTime(0.1f);// default
             frameDatas.add(frameData);
         }
         if (frameDatas.isEmpty()) {
@@ -53,6 +55,9 @@ public class AnimationManager {
             return;
         }
         basicAnimation = new BasicAnimation(frameDatas);
+        if (MainGame.getInstance().getFrameDataManager().getCurrentFrameData() == null) {
+            MainGame.getInstance().getFrameDataManager().setCurrentFrameData(basicAnimation.getFrame(0));
+        }
     }
 
     static public String nameOfTexture (TextureRegion textureRegion) {

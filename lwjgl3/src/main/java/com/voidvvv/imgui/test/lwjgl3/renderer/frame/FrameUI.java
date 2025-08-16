@@ -4,7 +4,7 @@ import com.voidvvv.imgui.test.lwjgl3.renderer.ui.UIRender;
 import imgui.ImGui;
 
 public class FrameUI implements UIRender {
-    FileOperaPanel fileOperaPanel = new FileOperaPanel();
+    public static FileOperaPanel fileOperaPanel = new FileOperaPanel();
     DebugMessagePenal debugMessagePenal = new DebugMessagePenal();
 
     SystemFilePanel systemFilePanel = new SystemFilePanel();

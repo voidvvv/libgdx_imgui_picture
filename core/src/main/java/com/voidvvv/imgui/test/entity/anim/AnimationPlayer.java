@@ -1,5 +1,6 @@
 package com.voidvvv.imgui.test.entity.anim;
 
+import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.entity.frame.FrameData;
 
 public class AnimationPlayer {
@@ -18,6 +19,7 @@ public class AnimationPlayer {
     int currentFrameIndex = 0;
 
     public void play () {
+
         if (animation == null) {
             throw new IllegalStateException("Animation is not set.");
         }
@@ -31,6 +33,7 @@ public class AnimationPlayer {
         durationTime = 0f;
         currentFrameIndex = 0;
         currentFrame = animation.getFrame(0);
+        MainGame.getInstance().getFrameDataManager().setCurrentFrameData(currentFrame);
     }
 
     public void stop () {
@@ -54,9 +57,14 @@ public class AnimationPlayer {
     }
 
     public void update(float delta) {
-        if (!playing || animation == null) {
+        if (animation == null) {
+            animation = MainGame.getInstance().getAnimationManager().getBasicAnimation();
+
+        }
+        if (animation == null || !playing) {
             return;
         }
+
         currentTime += delta;
         durationTime += delta;
         if (durationTime >= currentFrame.getDurationTime()) {
@@ -118,10 +126,11 @@ public class AnimationPlayer {
         return currentFrameIndex;
     }
 
-    public void setCurrentFrameIndex(int currentFrameIndex) {
+    public FrameData setCurrentFrameIndex(int currentFrameIndex) {
         this.currentFrameIndex = currentFrameIndex;
         this.currentFrame = animation.getFrame(currentFrameIndex);
         this.durationTime = 0f; // Reset duration time when changing frame
+        return this.currentFrame;
     }
 
     public float getDurationTime() {

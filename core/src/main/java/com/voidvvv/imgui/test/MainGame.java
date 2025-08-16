@@ -66,7 +66,6 @@ public class MainGame extends Game {
         frameId++;
 
         super.render();
-        animationPlayerManager.update(Gdx.graphics.getDeltaTime());
     }
 
     private MainGame() {
