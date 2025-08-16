@@ -3,6 +3,7 @@ package com.voidvvv.imgui.test.entity.anim;
 import com.voidvvv.imgui.test.entity.frame.FrameData;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -17,7 +18,7 @@ public class BasicAnimation {
         return frames.size();
     }
 
-    public BasicAnimation(List<FrameData> frames) {
+    public BasicAnimation(Collection<FrameData> frames) {
         this.frames.addAll(frames);
     }
 

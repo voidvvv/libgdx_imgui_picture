@@ -168,7 +168,7 @@ public class MainGame extends Game {
     @Override
     public void resize(int width, int height) {
         super.resize(width, height);
-        this.cameraManager.resize(width, height);
+//        this.cameraManager.resize(width, height);
     }
 
     public AssetManager getAbsoluteAssetManager() {

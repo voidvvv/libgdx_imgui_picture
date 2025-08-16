@@ -5,6 +5,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.entity.frame.FrameData;
@@ -88,11 +89,23 @@ public class FileOperaPanel implements UIRender {
                     MainGame.getInstance().getAnimationManager().loadAnimByPic(assetManager.get(s, Texture.class));
                 }
 
+                if (isAtlas(fh)) {
+                    AssetManager assetManager = MainGame.getInstance().getAbsoluteAssetManager();
+                    assetManager.load(s, TextureAtlas.class);
+                    assetManager.finishLoading();
+                    MainGame.getInstance().getAnimationManager().loadAnimByAtlas(assetManager.get(s, TextureAtlas.class));
+
+                }
+
             } catch (Exception e) {
                 tip.set(TIP_ERROR + "\n" + e.getMessage());
             }
             loadFile = false;
         }
+    }
+
+    private boolean isAtlas(FileHandle fh) {
+        return fh != null && fh.extension().equalsIgnoreCase("atlas");
     }
 
     private boolean isPic(FileHandle fh) {

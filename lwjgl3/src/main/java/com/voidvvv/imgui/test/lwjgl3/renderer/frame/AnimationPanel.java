@@ -1,8 +1,11 @@
 package com.voidvvv.imgui.test.lwjgl3.renderer.frame;
 
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.entity.anim.AnimationPlayer;
 import com.voidvvv.imgui.test.entity.anim.BasicAnimation;
+import com.voidvvv.imgui.test.entity.frame.FrameData;
 import com.voidvvv.imgui.test.lwjgl3.renderer.ui.UIRender;
 import com.voidvvv.imgui.test.manager.AnimationManager;
 import imgui.ImGui;
@@ -18,7 +21,7 @@ public class AnimationPanel implements UIRender {
             int frameCount = basicAnimation.getFrameCount();
             ImGui.begin("Animation Panel", show);
             for (int i = 0; i < frameCount; i++) {
-                if (ImGui.button("Frame " + i)) {
+                if (ImGui.button(nameOfFrame(i))) {
                     MainGame.getInstance().getFrameDataManager().setCurrentFrameData(
                         basicAnimation.getFrame(i)
                     );
@@ -27,6 +30,12 @@ public class AnimationPanel implements UIRender {
             }
             ImGui.end();
         }
+    }
+
+    private String nameOfFrame(int i) {
+        FrameData frame = basicAnimation.getFrame(i);
+        TextureRegion textureRegion = frame.getTextureRegion();
+        return textureRegion == null ? "": AnimationManager.nameOfTexture(textureRegion);
     }
 
     private boolean updateParam() {
