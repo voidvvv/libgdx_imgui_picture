@@ -7,12 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FrameData {
+
+    String name;
     Vector2 renderOffset = new Vector2(0, 0);
     List<AttackCheck> attackCheckRects = new ArrayList<>();
 
     TextureRegion textureRegion;
     private float durationTime;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Vector2 getRenderOffset() {
         return renderOffset;

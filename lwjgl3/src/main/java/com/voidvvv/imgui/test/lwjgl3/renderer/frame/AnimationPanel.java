@@ -16,6 +16,7 @@ public class AnimationPanel implements UIRender {
     ImBoolean show = new ImBoolean(false);
     AnimationPlayer player = null;
     BasicAnimation basicAnimation;
+
     @Override
     public void render() {
         if (updateParam()) {
@@ -25,24 +26,36 @@ public class AnimationPanel implements UIRender {
             playButton();
             stopButton();
             for (int i = 0; i < frameCount; i++) {
+                ImGui.pushID(i);
                 if (frameButton(i, currentFrameIndex)) {
-                    MainGame.getInstance().getAnimationPlayerManager().specifyFrame(i);
+                    MainGame.getInstance().getAnimationPlayerManager().specifyFrame(i, basicAnimation);
                 }
-
+                ImGui.sameLine();
+                ImGui.separator();
+                if (deleteButton(i)) {
+                    MainGame.getInstance().getAnimationManager().deleteFrame(i);
+                }
+                ImGui.popID();
             }
             ImGui.end();
         }
     }
-    ImVec4 color = new ImVec4(0.5f,0.5f, 0.5f, 1f);
+
+    private boolean deleteButton(int i) {
+        return ImGui.button("delete");
+    }
+
+    ImVec4 color = new ImVec4(0.5f, 0.5f, 0.5f, 1f);
+
     private boolean frameButton(int i, int currentFrameIndex) {
         if (i == currentFrameIndex) {
             return
-                ImGui.colorButton(nameOfFrame(i),color);
+                ImGui.colorButton(nameOfFrame(i), color);
         }
         return ImGui.button(nameOfFrame(i));
     }
 
-    public void stopButton () {
+    public void stopButton() {
         if (ImGui.button("stop")) {
             player.stop();
         }
@@ -56,13 +69,13 @@ public class AnimationPanel implements UIRender {
 
     private String nameOfFrame(int i) {
         FrameData frame = basicAnimation.getFrame(i);
-        TextureRegion textureRegion = frame.getTextureRegion();
-        return textureRegion == null ? "": AnimationManager.nameOfTexture(textureRegion);
+        return frame.getName();
     }
 
     private boolean updateParam() {
-        player = MainGame.getInstance().getAnimationPlayerManager().getAnimationPlayer();
         basicAnimation = MainGame.getInstance().getAnimationManager().getBasicAnimation();
+
+        player = MainGame.getInstance().getAnimationPlayerManager().getAnimationPlayer(basicAnimation);
         show.set(MainGame.getInstance().getAnimationManager().getBasicAnimation() != null);
         return show.get() && player != null && basicAnimation != null;
     }

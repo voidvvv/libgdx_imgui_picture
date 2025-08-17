@@ -8,8 +8,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Rectangle;
 import com.voidvvv.imgui.test.MainGame;
+import com.voidvvv.imgui.test.entity.anim.BasicAnimation;
 import com.voidvvv.imgui.test.entity.frame.FrameData;
 import com.voidvvv.imgui.test.lwjgl3.renderer.ui.UIRender;
+import com.voidvvv.imgui.test.manager.AnimationManager;
 import com.voidvvv.imgui.test.manager.FrameAttackCheckColorManager;
 import imgui.ImGui;
 import imgui.flag.ImGuiColorEditFlags;
@@ -19,6 +21,8 @@ import imgui.gl3.ImGuiImplGl3;
 import imgui.type.ImBoolean;
 import imgui.type.ImFloat;
 import imgui.type.ImString;
+
+import java.util.List;
 
 public class FileOperaPanel implements UIRender {
     ImBoolean open = new ImBoolean(true);
@@ -34,11 +38,35 @@ public class FileOperaPanel implements UIRender {
         if (open.get()) {
             ImGui.begin("FileOperaPanel", open);
             loadFilePenal();
+            ImGui.separator();
+            animationList();
 
             ImGui.end();
         }
 
         update();
+    }
+
+    private void animationList() {
+        AnimationManager animationManager = MainGame.getInstance().getAnimationManager();
+        List<BasicAnimation> animations = animationManager.getAnimations();
+        if (animations.isEmpty()) {
+            ImGui.text(tip.get());
+            return;
+        }
+        for (BasicAnimation anim : animations) {
+            animationSwitchButton(anim);
+        }
+    }
+
+    private void animationSwitchButton(BasicAnimation anim) {
+        if (ImGui.button(anim.getName())) {
+            MainGame.getInstance().getAnimationManager().trySwitchAnim(anim);
+        }
+        ImGui.sameLine();
+        if (ImGui.button("delete")) {
+            MainGame.getInstance().getAnimationManager().deleteAnimation(anim);
+        }
     }
 
     private void loadFilePenal() {
@@ -78,7 +106,10 @@ public class FileOperaPanel implements UIRender {
         if (loadFile) {
             String s = filePath.get();
             if (s == null || s.isEmpty()) {
-                s = "C:\\Users\\voidvvv\\Pictures\\asset\\card2.png";
+                System.out.println(System.getenv().keySet());
+                String imguiAtlasHome = System.getenv("imgui_atlas_home");
+                System.out.println("imguiAtlasHome = " + imguiAtlasHome);
+                s = imguiAtlasHome;
                 filePath.set(s);
             }
 

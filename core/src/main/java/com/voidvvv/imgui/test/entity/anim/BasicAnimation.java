@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class BasicAnimation {
+    String name;
     List<FrameData> frames = new ArrayList<>();
 
     public FrameData getFrame(int i) {
@@ -26,8 +27,17 @@ public class BasicAnimation {
         this.frames.addAll(Stream.of(frames).toList());
     }
 
+    public void removeFrame (FrameData frameData) {
+        frames.remove(frameData);
+    }
 
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 //
 
 }

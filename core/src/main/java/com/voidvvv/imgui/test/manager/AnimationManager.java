@@ -10,16 +10,21 @@ import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.entity.anim.BasicAnimation;
 import com.voidvvv.imgui.test.entity.frame.FrameData;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 public class AnimationManager {
     BasicAnimation basicAnimation;
 
+    List<BasicAnimation> animations = new ArrayList<>();
+
+    Map<String, BasicAnimation> animationMap = new java.util.HashMap<>();
+
     public AnimationManager() {
 
+    }
+
+    public List<BasicAnimation> getAnimations() {
+        return animations;
     }
 
     public BasicAnimation getBasicAnimation() {
@@ -34,6 +39,7 @@ public class AnimationManager {
         TextureRegion tr = new TextureRegion(tx);
         FrameData frameData = new FrameData();
         frameData.setTextureRegion(tr);
+        frameData.setName(nameOfTexture(tr));
         basicAnimation = new BasicAnimation(frameData);
     }
 
@@ -48,16 +54,35 @@ public class AnimationManager {
             FrameData frameData = new FrameData();
             frameData.setTextureRegion(region);
             frameData.setDurationTime(0.1f);// default
+            frameData.setName(nameOfTexture(region));
             frameDatas.add(frameData);
         }
         if (frameDatas.isEmpty()) {
             Gdx.app.error("AnimationManager", "No regions found in TextureAtlas");
             return;
         }
-        basicAnimation = new BasicAnimation(frameDatas);
-        if (MainGame.getInstance().getFrameDataManager().getCurrentFrameData() == null) {
-            MainGame.getInstance().getFrameDataManager().setCurrentFrameData(basicAnimation.getFrame(0));
+        String name = fh.nameWithoutExtension();
+        BasicAnimation currentAnim = new BasicAnimation(frameDatas);
+        if (animationMap.containsKey(name)) {
+            Gdx.app.error("AnimationManager", "Animation with name " + name + " already exists");
+            return;
         }
+        currentAnim.setName(name);
+        animations.add(currentAnim);
+        animationMap.put(name, currentAnim);
+        if (basicAnimation == null) {
+            basicAnimation = currentAnim;
+        }
+        if (MainGame.getInstance().getFrameDataManager().getCurrentFrameData() == null) {
+            basicAnimation = currentAnim;
+            MainGame.getInstance().getFrameDataManager().setCurrentFrameData(currentAnim.getFrame(0));
+        }
+        MainGame.getInstance().getAnimationPlayerManager().setAnimationPlayer(currentAnim);
+    }
+
+    public void update() {
+        realDeleteFrameInCurAnim();
+        realSwitchAnim();
     }
 
     static public String nameOfTexture (TextureRegion textureRegion) {
@@ -69,6 +94,56 @@ public class AnimationManager {
         }
         return "TextureRegion (" + textureRegion.getTexture().getWidth() + "x" +
             textureRegion.getTexture().getHeight() + ")";
+
+    }
+
+    public void deleteFrame(int i) {
+        deleteId = i;
+    }
+    private int deleteId = -1;
+    private void realDeleteFrameInCurAnim() {
+        if (deleteId < 0) {
+            return;
+        }
+        int i = deleteId;
+        deleteId = -1;
+        if (basicAnimation == null || basicAnimation.getFrameCount() <= i) {
+            Gdx.app.error("AnimationManager", "BasicAnimation is null or index out of bounds");
+            return;
+        }
+        FrameData needDelete = basicAnimation.getFrame(i);
+        if (needDelete == null) {
+            return;
+        }
+        basicAnimation.removeFrame(needDelete);
+        if (MainGame.getInstance().getFrameDataManager().getCurrentFrameData() == needDelete) {
+            MainGame.getInstance().getAnimationPlayerManager().getAnimationPlayer(basicAnimation).setCurrentFrameIndex(0);
+            MainGame.getInstance().getFrameDataManager().setCurrentFrameData(basicAnimation.getFrame(0));
+        }
+        if (MainGame.getInstance().getAnimationPlayerManager().getAnimationPlayer(basicAnimation).getCurrentFrameIndex() > i) {
+            MainGame.getInstance().getAnimationPlayerManager().getAnimationPlayer(basicAnimation).setCurrentFrameIndex(
+                MainGame.getInstance().getAnimationPlayerManager().getAnimationPlayer(basicAnimation).getCurrentFrameIndex() - 1);
+
+        }
+    }
+
+    public void trySwitchAnim(BasicAnimation anim) {
+        waitToBeSwitchAnim = anim;
+    }
+    private BasicAnimation waitToBeSwitchAnim = null;
+    private void realSwitchAnim () {
+        if (waitToBeSwitchAnim == null) {
+            return;
+        }
+        BasicAnimation oldAnim = MainGame.getInstance().getAnimationManager().getBasicAnimation();
+        if (oldAnim != null) {
+            MainGame.getInstance().getAnimationPlayerManager().getAnimationPlayer(oldAnim).stop();
+        }
+        MainGame.getInstance().getAnimationManager().setBasicAnimation(waitToBeSwitchAnim);
+        waitToBeSwitchAnim = null;
+    }
+
+    public void deleteAnimation(BasicAnimation anim) {
 
     }
 }

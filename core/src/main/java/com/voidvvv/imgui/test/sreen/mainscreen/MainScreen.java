@@ -14,6 +14,7 @@ import com.sun.tools.javac.Main;
 import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.asset.BasePictureRender;
 import com.voidvvv.imgui.test.data.MainScreenGroundData;
+import com.voidvvv.imgui.test.entity.anim.BasicAnimation;
 import com.voidvvv.imgui.test.entity.frame.FrameData;
 import com.voidvvv.imgui.test.manager.AnimationPlayerManager;
 import com.voidvvv.imgui.test.manager.CameraController;
@@ -46,13 +47,19 @@ public class MainScreen implements Screen {
     @Override
     public void render(float delta) {
         ScreenUtils.clear(0.5f,0.5f,0.5f,1f);
-        AnimationPlayerManager animationPlayerManager = MainGame.getInstance().getAnimationPlayerManager();
-        MainGame.getInstance().getCameraManager().update(delta);
-        animationPlayerManager.update(delta);
-        if (animationPlayerManager.getAnimationPlayer().isPlaying()) {
-            FrameData currentFrame = animationPlayerManager.getAnimationPlayer().getCurrentFrame();
-            MainGame.getInstance().getFrameDataManager().setCurrentFrameData(currentFrame);
+        BasicAnimation basicAnimation = MainGame.getInstance().getAnimationManager().getBasicAnimation();
+        if (basicAnimation != null) {
+            AnimationPlayerManager animationPlayerManager = MainGame.getInstance().getAnimationPlayerManager();
+            MainGame.getInstance().getAnimationManager().update();
+            MainGame.getInstance().getCameraManager().update(delta);
+            animationPlayerManager.update(delta);
+
+            if (animationPlayerManager.getAnimationPlayer(basicAnimation).isPlaying()) {
+                FrameData currentFrame = animationPlayerManager.getAnimationPlayer(basicAnimation).getCurrentFrame();
+                MainGame.getInstance().getFrameDataManager().setCurrentFrameData(currentFrame);
+            }
         }
+
 
         mainStage.act(delta);
         mainStage.draw();
