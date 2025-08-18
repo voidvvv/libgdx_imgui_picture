@@ -40,7 +40,7 @@ public class FrameDataRenderListener extends InputListener {
     @Override
     public void touchDragged(InputEvent event, float x, float y, int pointer) {
         FrameData global = MainGame.getInstance().getFrameDataManager().getCurrentFrameData();
-        if (currentFrameData == global && drag) {
+        if (currentFrameData != null && currentFrameData == global && drag) {
             MainGame.getInstance().getDebugManager().pushMsg("touchDragged: " + x + ", " + y);
 
             currentFrameData.getRenderOffset().set(

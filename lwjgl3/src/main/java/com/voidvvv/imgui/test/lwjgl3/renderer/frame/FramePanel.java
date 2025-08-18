@@ -114,9 +114,9 @@ public class FramePanel implements UIRender {
         pickColor[0] = color.r;
         pickColor[1] = color.g;
         pickColor[2] = color.b;
-        if (ImGui.colorButton("rect " + i, color.r, color.g, color.b, 1f, ImGuiColorEditFlags.NoTooltip)) {
-
-        }
+//        if (ImGui.colorButton("rect " + i, color.r, color.g, color.b, 1f, ImGuiColorEditFlags.NoTooltip)) {
+//
+//        }
 
         boolean b = ImGui.colorPicker3("change color", pickColor);
         if (b) {

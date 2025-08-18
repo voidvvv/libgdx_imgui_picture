@@ -6,6 +6,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.voidvvv.imgui.test.MainGame;
 import com.voidvvv.imgui.test.entity.anim.BasicAnimation;
@@ -13,6 +14,7 @@ import com.voidvvv.imgui.test.entity.frame.FrameData;
 import com.voidvvv.imgui.test.lwjgl3.renderer.ui.UIRender;
 import com.voidvvv.imgui.test.manager.AnimationManager;
 import com.voidvvv.imgui.test.manager.FrameAttackCheckColorManager;
+import com.voidvvv.imgui.test.manager.WorkContextManager;
 import imgui.ImGui;
 import imgui.flag.ImGuiColorEditFlags;
 import imgui.flag.ImGuiKey;
@@ -23,6 +25,7 @@ import imgui.type.ImFloat;
 import imgui.type.ImString;
 
 import java.util.List;
+import java.util.Map;
 
 public class FileOperaPanel implements UIRender {
     ImBoolean open = new ImBoolean(true);
@@ -39,7 +42,7 @@ public class FileOperaPanel implements UIRender {
             ImGui.begin("FileOperaPanel", open);
             loadFilePenal();
             ImGui.separator();
-            animationList();
+            assetsList();
 
             ImGui.end();
         }
@@ -47,17 +50,37 @@ public class FileOperaPanel implements UIRender {
         update();
     }
 
-    private void animationList() {
-        AnimationManager animationManager = MainGame.getInstance().getAnimationManager();
-        List<BasicAnimation> animations = animationManager.getAnimations();
-        if (animations.isEmpty()) {
+    private void assetsList() {
+        ImGui.separator();
+        WorkContextManager contextManager = MainGame.getInstance().getContextManager();
+        Map<String, TextureRegion> assetMap = contextManager.getAssetMap();
+        if (assetMap.isEmpty()) {
             ImGui.text(tip.get());
             return;
         }
-        for (BasicAnimation anim : animations) {
-            animationSwitchButton(anim);
+        ImGui.text("Assets List:");
+        if (ImGui.beginChild("assetsList", ImGuiWindowFlags.HorizontalScrollbar)) {
+            for (Map.Entry<String, TextureRegion> entry : assetMap.entrySet()) {
+                String name = entry.getKey();
+                TextureRegion textureRegion = entry.getValue();
+                if (textureRegion == null) {
+                    continue;
+                }
+                ImGui.text(name);
+                ImGui.sameLine();
+                if (ImGui.button("use")) {
+//                    MainGame.getInstance().getContextManager().addAsset(name, textureRegion);
+//                    MainGame.getInstance().getAnimationManager().loadAnimByPic(textureRegion.getTexture());
+                }
+
+            }
+
+
+            ImGui.endChild();
         }
+
     }
+
 
     private void animationSwitchButton(BasicAnimation anim) {
         if (ImGui.button(anim.getName())) {
@@ -127,7 +150,7 @@ public class FileOperaPanel implements UIRender {
                     AssetManager assetManager = MainGame.getInstance().getAbsoluteAssetManager();
                     assetManager.load(s, TextureAtlas.class);
                     assetManager.finishLoading();
-                    MainGame.getInstance().getAnimationManager().loadAnimByAtlas(fh, assetManager.get(s, TextureAtlas.class));
+                    MainGame.getInstance().getContextManager().initAtlas(fh, assetManager.get(s, TextureAtlas.class));
 
                 }
 

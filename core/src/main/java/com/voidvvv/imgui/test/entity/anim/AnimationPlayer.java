@@ -20,8 +20,8 @@ public class AnimationPlayer {
 
     public void play () {
 
-        if (animation == null) {
-            throw new IllegalStateException("Animation is not set.");
+        if (animation == null || animation.getFrameCount() == 0) {
+            return;
         }
         playing = true;
         // Reset animation state if needed

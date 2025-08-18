@@ -51,7 +51,7 @@ public class MainScreen implements Screen {
         if (basicAnimation != null) {
             AnimationPlayerManager animationPlayerManager = MainGame.getInstance().getAnimationPlayerManager();
             MainGame.getInstance().getAnimationManager().update();
-            MainGame.getInstance().getCameraManager().update(delta);
+
             animationPlayerManager.update(delta);
 
             if (animationPlayerManager.getAnimationPlayer(basicAnimation).isPlaying()) {
@@ -59,7 +59,7 @@ public class MainScreen implements Screen {
                 MainGame.getInstance().getFrameDataManager().setCurrentFrameData(currentFrame);
             }
         }
-
+        MainGame.getInstance().getCameraManager().update(delta);
 
         mainStage.act(delta);
         mainStage.draw();

@@ -43,7 +43,7 @@ public class AnimationManager {
         basicAnimation = new BasicAnimation(frameData);
     }
 
-    public void loadAnimByAtlas(FileHandle fh, TextureAtlas textureAtlas) {
+    public void loadAnimByAtlas(TextureAtlas textureAtlas) {
         if (textureAtlas == null) {
             Gdx.app.error("AnimationManager", "TextureAtlas is null");
             return;
@@ -61,8 +61,17 @@ public class AnimationManager {
             Gdx.app.error("AnimationManager", "No regions found in TextureAtlas");
             return;
         }
-        String name = fh.nameWithoutExtension();
         BasicAnimation currentAnim = new BasicAnimation(frameDatas);
+        addAnimation("name", currentAnim);
+
+    }
+
+    public void addAnimation (String name) {
+        BasicAnimation currentAnim = new BasicAnimation();
+        addAnimation(name, currentAnim);
+    }
+
+    private void addAnimation(String name, BasicAnimation currentAnim) {
         if (animationMap.containsKey(name)) {
             Gdx.app.error("AnimationManager", "Animation with name " + name + " already exists");
             return;
@@ -73,7 +82,7 @@ public class AnimationManager {
         if (basicAnimation == null) {
             basicAnimation = currentAnim;
         }
-        if (MainGame.getInstance().getFrameDataManager().getCurrentFrameData() == null) {
+        if (MainGame.getInstance().getFrameDataManager().getCurrentFrameData() == null && currentAnim.getFrameCount() > 0) {
             basicAnimation = currentAnim;
             MainGame.getInstance().getFrameDataManager().setCurrentFrameData(currentAnim.getFrame(0));
         }

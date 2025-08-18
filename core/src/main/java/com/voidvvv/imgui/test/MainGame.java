@@ -50,6 +50,8 @@ public class MainGame extends Game {
 
 
     SplitImageManager splitImageManager;
+
+    WorkContextManager contextManager;
     public AnimationPlayerManager getAnimationPlayerManager() {
         return animationPlayerManager;
     }
@@ -86,6 +88,11 @@ public class MainGame extends Game {
         animationManager = new AnimationManager();
         animationPlayerManager = new AnimationPlayerManager();
         splitImageManager = new SplitImageManager();
+        contextManager = new WorkContextManager();
+    }
+
+    public WorkContextManager getContextManager() {
+        return contextManager;
     }
 
     public SplitImageManager getSplitImageManager() {
