@@ -37,7 +37,6 @@ public class AnimationPlayerManager {
             AnimationPlayer animationPlayer = entry.getValue();
             if (animationPlayer != null) {
                 animationPlayer.update(deltaTime);
-
             }
             if (animationPlayer != null && animationPlayer.isPlaying()) {
                 MainGame.getInstance().getFrameDataManager().setCurrentFrameData(animationPlayer.getCurrentFrame());

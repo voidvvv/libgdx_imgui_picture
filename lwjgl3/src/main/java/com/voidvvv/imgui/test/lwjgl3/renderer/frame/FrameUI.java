@@ -13,6 +13,8 @@ public class FrameUI implements UIRender {
 
     public static final AnimationPanel animationPanel = new AnimationPanel();
 
+    public static final AnimationListPanel animationListPanel = new AnimationListPanel();
+
     @Override
     public void render() {
 
@@ -21,5 +23,6 @@ public class FrameUI implements UIRender {
         systemFilePanel.render();
         framePanel.render();
         animationPanel.render();
+        animationListPanel.render();
     }
 }

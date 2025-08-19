@@ -41,6 +41,7 @@ public class FileOperaPanel implements UIRender {
         if (open.get()) {
             ImGui.begin("FileOperaPanel", open);
             loadFilePenal();
+            showAnimationList();
             ImGui.separator();
             assetsList();
 
@@ -48,6 +49,12 @@ public class FileOperaPanel implements UIRender {
         }
 
         update();
+    }
+
+    private void showAnimationList() {
+        if (ImGui.button("Animation List")) {
+            FrameUI.animationListPanel.setOpen(true);
+        }
     }
 
     private void assetsList() {
