@@ -1,6 +1,7 @@
 package com.voidvvv.imgui.test.lwjgl3.renderer.frame;
 
 import com.voidvvv.imgui.test.MainGame;
+import com.voidvvv.imgui.test.entity.anim.BasicAnimation;
 import com.voidvvv.imgui.test.lwjgl3.renderer.ui.UIRender;
 import com.voidvvv.imgui.test.manager.AnimationManager;
 import imgui.ImGui;
@@ -23,21 +24,44 @@ public class AnimationListPanel implements UIRender {
             addAnimButton();
             ImGui.text("Animation List");
             ImGui.separator();
-            if (animationManager.getAnimations().isEmpty()) {
-                ImGui.text("No Animations Loaded");
-            } else {
-                for (int i = 0; i < animationManager.getAnimations().size(); i++) {
-                    String name = animationManager.getAnimations().get(i).getName();
-                    if (ImGui.button(name)) {
+            renderList();
+            ImGui.end();
 
-                    }
-                    ImGui.sameLine();
-                    if (ImGui.button("Delete")) {
+        }
 
-                    }
+        update();
+    }
+    boolean addingAnimFlag = false;
+    void update () {
+        addAnim();
+    }
+
+    private void addAnim() {
+        if (addingAnimFlag) {
+            String animNameStr = animName.get();
+            animationManager.addAnimation(animNameStr);
+            addingAnimFlag = false;
+        }
+    }
+
+    private void renderList() {
+        if (animationManager.getAnimations().isEmpty()) {
+            ImGui.text("No Animations Loaded");
+        } else {
+            for (int i = 0; i < animationManager.getAnimations().size(); i++) {
+                BasicAnimation basicAnimation = animationManager.getAnimations().get(i);
+
+                nameButton(basicAnimation);
+                ImGui.sameLine();
+                if (ImGui.button("Delete")) {
+
                 }
             }
-            ImGui.end();
+        }
+    }
+
+    private void nameButton(BasicAnimation basicAnimation) {
+        if (ImGui.button(basicAnimation.getName())) {
 
         }
     }
@@ -73,6 +97,7 @@ public class AnimationListPanel implements UIRender {
 
     private void confirmButton() {
         if (ImGui.button("Confirm")) {
+            addingAnimFlag = true;
             adding.set(false);
         }
     }

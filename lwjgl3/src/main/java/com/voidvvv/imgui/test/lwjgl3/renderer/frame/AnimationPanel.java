@@ -22,7 +22,9 @@ public class AnimationPanel implements UIRender {
         if (updateParam()) {
             int frameCount = basicAnimation.getFrameCount();
             int currentFrameIndex = player.getCurrentFrameIndex();
-            ImGui.begin("Animation Panel", show);
+            BasicAnimation animation = player.getAnimation();
+            String name = animation.getName();
+            ImGui.begin("Animation Panel : " + name, show);
             playButton();
             stopButton();
             for (int i = 0; i < frameCount; i++) {

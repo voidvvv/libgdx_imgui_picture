@@ -6,6 +6,8 @@ import com.voidvvv.imgui.test.entity.frame.FrameData;
 public class AnimationPlayer {
     BasicAnimation animation;
 
+    boolean show = false;
+
     boolean loop = true;
 
     boolean playing = false;
@@ -32,8 +34,10 @@ public class AnimationPlayer {
         currentTime = 0f;
         durationTime = 0f;
         currentFrameIndex = 0;
-        currentFrame = animation.getFrame(0);
-        MainGame.getInstance().getFrameDataManager().setCurrentFrameData(currentFrame);
+        if (!animation.frames.isEmpty()) {
+            currentFrame = animation.getFrame(0);
+            MainGame.getInstance().getFrameDataManager().setCurrentFrameData(currentFrame);
+        }
     }
 
     public void stop () {
@@ -141,7 +145,12 @@ public class AnimationPlayer {
         this.durationTime = durationTime;
     }
 
+    public void show (boolean show) {
+        this.show = show;
+    }
 
-
+    public boolean isShow () {
+        return this.show;
+    }
 
 }
